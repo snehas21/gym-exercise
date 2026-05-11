@@ -3,928 +3,1475 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Countries & Capitals Trivia</title>
+  <title>Gym Exercise Guide</title>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0d0d;
+      --surface: #1a1a1a;
+      --surface2: #242424;
+      --border: rgba(255,255,255,0.08);
+      --text: #f0f0f0;
+      --muted: #888;
+      --accent: #e63946;
+      --accent2: #f4a261;
     }
 
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
       min-height: 100vh;
+    }
+
+    /* ── NAV ── */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(13,13,13,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 20px;
+      height: 60px;
       display: flex;
       align-items: center;
-      justify-content: center;
-      padding: 20px;
+      gap: 12px;
     }
 
-    .container {
-      width: 100%;
-      max-width: 700px;
-    }
-
-    /* ── SCREEN PANELS ── */
-    .screen {
+    .nav-back {
+      background: none;
+      border: none;
+      color: var(--accent);
+      font-size: 1.4rem;
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 8px;
       display: none;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 24px;
-      padding: 40px 36px;
-      backdrop-filter: blur(12px);
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
-      animation: fadeIn 0.4s ease;
+      transition: background 0.15s;
     }
 
+    .nav-back:hover { background: rgba(230,57,70,0.12); }
+    .nav-back.visible { display: block; }
+
+    .nav-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .nav-logo {
+      font-size: 1.4rem;
+      margin-right: 4px;
+    }
+
+    /* ── SCREENS ── */
+    .screen { display: none; }
     .screen.active { display: block; }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ── WELCOME SCREEN ── */
-    .welcome-icon {
-      font-size: 72px;
+    /* ── HOME ── */
+    .hero {
       text-align: center;
-      margin-bottom: 16px;
-      animation: bounce 1.5s infinite;
+      padding: 48px 20px 32px;
     }
 
-    @keyframes bounce {
-      0%, 100% { transform: translateY(0); }
-      50%       { transform: translateY(-10px); }
-    }
+    .hero-icon { font-size: 64px; margin-bottom: 16px; }
 
-    h1 {
-      text-align: center;
-      color: #fff;
+    .hero h1 {
       font-size: 2rem;
-      font-weight: 800;
+      font-weight: 900;
+      background: linear-gradient(135deg, #fff 40%, var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
       margin-bottom: 8px;
-      text-shadow: 0 2px 12px rgba(0,0,0,0.4);
     }
 
-    .subtitle {
-      text-align: center;
-      color: #a0c4ff;
-      font-size: 1.05rem;
-      margin-bottom: 32px;
-    }
-
-    .info-cards {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 32px;
-    }
-
-    .info-card {
-      background: rgba(255, 255, 255, 0.08);
-      border-radius: 14px;
-      padding: 16px 12px;
-      text-align: center;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-    }
-
-    .info-card .icon { font-size: 28px; margin-bottom: 6px; }
-
-    .info-card .label {
-      color: #cbd5e1;
-      font-size: 0.78rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 4px;
-    }
-
-    .info-card .value {
-      color: #fff;
-      font-weight: 700;
+    .hero p {
+      color: var(--muted);
       font-size: 1rem;
+      max-width: 400px;
+      margin: 0 auto;
+      line-height: 1.5;
     }
 
-    /* difficulty selector */
-    .difficulty-label {
-      color: #a0c4ff;
-      font-size: 0.9rem;
+    .body-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 14px;
+      padding: 0 20px 40px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .body-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 24px 16px;
       text-align: center;
-      margin-bottom: 10px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-    }
-
-    .difficulty-selector {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-      margin-bottom: 28px;
-    }
-
-    .diff-btn {
-      padding: 8px 22px;
-      border-radius: 50px;
-      border: 2px solid rgba(255,255,255,0.2);
-      background: transparent;
-      color: #cbd5e1;
-      font-size: 0.9rem;
-      font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .diff-btn:hover { border-color: #60a5fa; color: #fff; }
-
-    .diff-btn.selected {
-      background: linear-gradient(135deg, #3b82f6, #6366f1);
-      border-color: transparent;
-      color: #fff;
-      box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
-    }
-
-    /* ── BUTTONS ── */
-    .btn-primary {
-      display: block;
-      width: 100%;
-      padding: 16px;
-      background: linear-gradient(135deg, #f59e0b, #ef4444);
-      color: #fff;
-      border: none;
-      border-radius: 14px;
-      font-size: 1.15rem;
-      font-weight: 800;
-      cursor: pointer;
-      transition: transform 0.15s, box-shadow 0.15s;
-      box-shadow: 0 6px 20px rgba(239, 68, 68, 0.35);
-      letter-spacing: 0.03em;
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 28px rgba(239, 68, 68, 0.45);
-    }
-
-    .btn-primary:active { transform: translateY(0); }
-
-    /* ── QUIZ SCREEN ── */
-    .quiz-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-
-    .progress-info {
-      color: #a0c4ff;
-      font-size: 0.9rem;
-      font-weight: 600;
-    }
-
-    .score-badge {
-      background: linear-gradient(135deg, #f59e0b, #ef4444);
-      color: #fff;
-      padding: 6px 16px;
-      border-radius: 50px;
-      font-weight: 700;
-      font-size: 0.9rem;
-    }
-
-    .progress-bar-wrap {
-      background: rgba(255,255,255,0.1);
-      border-radius: 50px;
-      height: 8px;
-      margin-bottom: 28px;
+      transition: transform 0.18s, border-color 0.18s, box-shadow 0.18s;
+      position: relative;
       overflow: hidden;
     }
 
-    .progress-bar {
-      height: 100%;
-      background: linear-gradient(90deg, #3b82f6, #8b5cf6);
-      border-radius: 50px;
-      transition: width 0.4s ease;
+    .body-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--card-color, var(--accent));
+      opacity: 0;
+      transition: opacity 0.18s;
+      border-radius: inherit;
     }
 
-    .question-category {
-      display: inline-block;
-      background: rgba(99, 102, 241, 0.25);
-      color: #a5b4fc;
-      font-size: 0.75rem;
+    .body-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--card-color, var(--accent));
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+
+    .body-card:hover::before { opacity: 0.08; }
+
+    .body-card .card-icon {
+      font-size: 44px;
+      margin-bottom: 10px;
+      position: relative;
+    }
+
+    .body-card .card-name {
+      font-size: 0.95rem;
       font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      padding: 4px 14px;
-      border-radius: 50px;
-      margin-bottom: 12px;
+      color: var(--text);
+      position: relative;
+      margin-bottom: 4px;
     }
 
-    .question-text {
-      color: #fff;
-      font-size: 1.3rem;
-      font-weight: 700;
-      line-height: 1.5;
-      margin-bottom: 28px;
-      min-height: 60px;
+    .body-card .card-count {
+      font-size: 0.78rem;
+      color: var(--muted);
+      position: relative;
     }
 
-    .question-flag {
-      font-size: 56px;
-      text-align: center;
-      margin-bottom: 12px;
+    .body-card .card-accent-line {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--card-color, var(--accent));
+      border-radius: 0 0 18px 18px;
+      opacity: 0;
+      transition: opacity 0.18s;
     }
 
-    .answers-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+    .body-card:hover .card-accent-line { opacity: 1; }
+
+    /* ── EXERCISE LIST ── */
+    .list-header {
+      padding: 24px 20px 16px;
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .list-header-icon { font-size: 36px; }
+
+    .list-header-info h2 {
+      font-size: 1.4rem;
+      font-weight: 800;
+    }
+
+    .list-header-info p { color: var(--muted); font-size: 0.88rem; }
+
+    .exercise-list {
+      padding: 0 20px 40px;
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
       gap: 12px;
     }
 
-    .answer-btn {
-      background: rgba(255, 255, 255, 0.07);
-      border: 2px solid rgba(255, 255, 255, 0.12);
-      border-radius: 14px;
-      padding: 16px 14px;
-      color: #e2e8f0;
-      font-size: 1rem;
-      font-weight: 600;
+    .exercise-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px 20px;
       cursor: pointer;
-      text-align: left;
-      transition: all 0.2s;
-      line-height: 1.3;
+      transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 16px;
     }
 
-    .answer-btn:hover:not(:disabled) {
-      background: rgba(99, 102, 241, 0.25);
-      border-color: #6366f1;
-      color: #fff;
+    .exercise-card:hover {
       transform: translateY(-2px);
+      border-color: var(--part-color, var(--accent));
+      box-shadow: 0 6px 24px rgba(0,0,0,0.3);
     }
 
-    .answer-btn.correct {
-      background: rgba(34, 197, 94, 0.25) !important;
-      border-color: #22c55e !important;
-      color: #86efac !important;
-      animation: pulse-green 0.4s ease;
-    }
-
-    .answer-btn.wrong {
-      background: rgba(239, 68, 68, 0.25) !important;
-      border-color: #ef4444 !important;
-      color: #fca5a5 !important;
-      animation: shake 0.4s ease;
-    }
-
-    @keyframes pulse-green {
-      0%   { transform: scale(1); }
-      50%  { transform: scale(1.04); }
-      100% { transform: scale(1); }
-    }
-
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      25%       { transform: translateX(-6px); }
-      75%       { transform: translateX(6px); }
-    }
-
-    .answer-btn:disabled { cursor: default; }
-
-    /* feedback bar */
-    .feedback-bar {
-      margin-top: 20px;
-      padding: 14px 20px;
+    .exercise-card-icon {
+      font-size: 32px;
+      flex-shrink: 0;
+      width: 52px;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--surface2);
       border-radius: 12px;
-      font-weight: 700;
+    }
+
+    .exercise-card-info { flex: 1; }
+
+    .exercise-card-name {
       font-size: 1rem;
-      text-align: center;
-      opacity: 0;
-      transition: opacity 0.3s;
-      min-height: 50px;
+      font-weight: 700;
+      margin-bottom: 4px;
     }
 
-    .feedback-bar.show { opacity: 1; }
-
-    .feedback-bar.correct-fb {
-      background: rgba(34, 197, 94, 0.18);
-      color: #86efac;
-      border: 1px solid rgba(34, 197, 94, 0.3);
-    }
-
-    .feedback-bar.wrong-fb {
-      background: rgba(239, 68, 68, 0.18);
-      color: #fca5a5;
-      border: 1px solid rgba(239, 68, 68, 0.3);
-    }
-
-    /* ── RESULTS SCREEN ── */
-    .results-icon {
-      font-size: 80px;
-      text-align: center;
-      margin-bottom: 12px;
-    }
-
-    .results-title {
-      text-align: center;
-      color: #fff;
-      font-size: 1.9rem;
-      font-weight: 800;
+    .exercise-card-machine {
+      font-size: 0.82rem;
+      color: var(--muted);
       margin-bottom: 6px;
     }
 
-    .results-subtitle {
-      text-align: center;
-      color: #a0c4ff;
-      margin-bottom: 28px;
-      font-size: 1rem;
+    .exercise-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
     }
 
-    .score-circle {
-      width: 140px;
-      height: 140px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    .tag {
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 50px;
+      background: var(--surface2);
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    .tag.diff-beginner { color: #4ade80; border-color: rgba(74,222,128,0.3); background: rgba(74,222,128,0.08); }
+    .tag.diff-intermediate { color: #facc15; border-color: rgba(250,204,21,0.3); background: rgba(250,204,21,0.08); }
+    .tag.diff-advanced { color: #f87171; border-color: rgba(248,113,113,0.3); background: rgba(248,113,113,0.08); }
+
+    .exercise-card-chevron {
+      color: var(--muted);
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    /* ── DETAIL ── */
+    .detail-header {
+      padding: 28px 20px 20px;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .detail-machine-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      padding: 6px 14px;
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .detail-name {
+      font-size: 1.8rem;
+      font-weight: 900;
+      line-height: 1.2;
+      margin-bottom: 10px;
+    }
+
+    .detail-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+
+    .detail-body {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 20px 60px;
       display: flex;
       flex-direction: column;
+      gap: 20px;
+    }
+
+    .detail-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+    }
+
+    .detail-section h3 {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 14px;
+      font-weight: 700;
+    }
+
+    .muscles-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .muscle-tag {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .muscle-tag.primary {
+      color: var(--part-color, var(--accent));
+      border-color: var(--part-color, var(--accent));
+      background: rgba(230,57,70,0.08);
+    }
+
+    .steps-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      counter-reset: steps;
+    }
+
+    .step {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+
+    .step-num {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      background: var(--part-color, var(--accent));
+      border-radius: 50%;
+      display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 28px;
-      box-shadow: 0 8px 32px rgba(99, 102, 241, 0.45);
-    }
-
-    .score-circle .big-num {
+      font-size: 0.78rem;
+      font-weight: 800;
       color: #fff;
-      font-size: 2.4rem;
-      font-weight: 900;
-      line-height: 1;
+      margin-top: 1px;
     }
 
-    .score-circle .out-of {
-      color: rgba(255,255,255,0.7);
-      font-size: 0.85rem;
+    .step-text {
+      color: #ccc;
+      font-size: 0.92rem;
+      line-height: 1.55;
     }
 
-    .stats-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 28px;
-    }
-
-    .stat-box {
-      background: rgba(255,255,255,0.07);
-      border-radius: 14px;
-      padding: 16px 10px;
-      text-align: center;
-      border: 1px solid rgba(255,255,255,0.1);
-    }
-
-    .stat-box .s-icon { font-size: 24px; margin-bottom: 6px; }
-    .stat-box .s-label { color: #94a3b8; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
-    .stat-box .s-value { color: #fff; font-weight: 800; font-size: 1.15rem; }
-
-    .rank-badge {
-      text-align: center;
-      background: rgba(245, 158, 11, 0.15);
-      border: 1px solid rgba(245, 158, 11, 0.3);
-      border-radius: 14px;
-      padding: 14px;
-      margin-bottom: 24px;
-    }
-
-    .rank-badge .rank-title { color: #fcd34d; font-weight: 700; font-size: 1.1rem; margin-bottom: 4px; }
-    .rank-badge .rank-desc  { color: #94a3b8; font-size: 0.88rem; }
-
-    .btn-row {
+    .setup-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px;
     }
 
-    .btn-secondary {
+    .setup-item {
+      background: var(--surface2);
+      border-radius: 12px;
       padding: 14px;
-      background: rgba(255,255,255,0.08);
-      border: 2px solid rgba(255,255,255,0.15);
-      border-radius: 14px;
-      color: #e2e8f0;
+    }
+
+    .setup-item .si-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .setup-item .si-value {
       font-size: 1rem;
       font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s;
+      color: var(--text);
     }
 
-    .btn-secondary:hover {
-      background: rgba(255,255,255,0.14);
-      border-color: rgba(255,255,255,0.3);
+    .tips-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
+
+    .tip-item {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      color: #ccc;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .tip-icon { flex-shrink: 0; font-size: 1rem; margin-top: 1px; }
 
     /* ── RESPONSIVE ── */
-    @media (max-width: 500px) {
-      .screen { padding: 28px 20px; }
-      h1 { font-size: 1.6rem; }
-      .answers-grid { grid-template-columns: 1fr; }
-      .info-cards { grid-template-columns: 1fr; }
-      .stats-row  { grid-template-columns: 1fr; }
-      .btn-row    { grid-template-columns: 1fr; }
+    @media (max-width: 520px) {
+      .hero h1 { font-size: 1.6rem; }
+      .body-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 14px 32px; }
+      .exercise-list { padding: 0 14px 32px; }
+      .list-header { padding: 20px 14px 12px; }
+      .detail-header { padding: 20px 14px 16px; }
+      .detail-body { padding: 0 14px 40px; }
+      .setup-grid { grid-template-columns: 1fr; }
+      .detail-name { font-size: 1.4rem; }
     }
   </style>
 </head>
 <body>
-<!-- fixed mute button – always visible -->
-<button class="mute-btn" onclick="toggleMute()" title="Toggle sound"
-  style="position:fixed;top:16px;right:16px;z-index:999;background:rgba(255,255,255,0.1);
-         border:1px solid rgba(255,255,255,0.2);border-radius:50%;width:42px;height:42px;
-         font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;
-         backdrop-filter:blur(8px);transition:background 0.2s;">🔊</button>
 
-<div class="container">
+<nav class="nav">
+  <button class="nav-back" id="nav-back" onclick="goBack()">&#8592;</button>
+  <span class="nav-logo">&#127947;</span>
+  <span class="nav-title" id="nav-title">Gym Exercise Guide</span>
+</nav>
 
-  <!-- ══ WELCOME SCREEN ══ -->
-  <div id="screen-welcome" class="screen active">
-    <div class="welcome-icon">🌍</div>
-    <h1>Countries &amp; Capitals</h1>
-    <p class="subtitle">Test your world geography knowledge!</p>
-
-    <div class="info-cards">
-      <div class="info-card">
-        <div class="icon">❓</div>
-        <div class="label">Questions</div>
-        <div class="value" id="q-count-display">15</div>
-      </div>
-      <div class="info-card">
-        <div class="icon">🎯</div>
-        <div class="label">Format</div>
-        <div class="value">4 Choices</div>
-      </div>
-      <div class="info-card">
-        <div class="icon">🏆</div>
-        <div class="label">Mode</div>
-        <div class="value">Single Player</div>
-      </div>
-    </div>
-
-    <div class="difficulty-label">Choose Difficulty</div>
-    <div class="difficulty-selector">
-      <button class="diff-btn selected" data-diff="easy">Easy</button>
-      <button class="diff-btn" data-diff="medium">Medium</button>
-      <button class="diff-btn" data-diff="hard">Hard</button>
-    </div>
-
-    <button class="btn-primary" id="btn-start">🚀 Start Quiz!</button>
+<!-- ══ HOME ══ -->
+<div id="screen-home" class="screen active">
+  <div class="hero">
+    <div class="hero-icon">&#127947;&#65039;</div>
+    <h1>Gym Exercise Guide</h1>
+    <p>Pick a body part to explore exercises you can do with common gym machines.</p>
   </div>
+  <div class="body-grid" id="body-grid"></div>
+</div>
 
-  <!-- ══ QUIZ SCREEN ══ -->
-  <div id="screen-quiz" class="screen">
-    <div class="quiz-header">
-      <span class="progress-info" id="progress-info">Question 1 of 15</span>
-      <span class="score-badge" id="score-display">Score: 0</span>
-    </div>
-    <div class="progress-bar-wrap">
-      <div class="progress-bar" id="progress-bar" style="width:0%"></div>
-    </div>
-
-    <div class="question-flag" id="question-flag"></div>
-    <div class="question-category" id="question-category">Capital City</div>
-    <div class="question-text" id="question-text"></div>
-
-    <div class="answers-grid" id="answers-grid"></div>
-
-    <div class="feedback-bar" id="feedback-bar"></div>
-  </div>
-
-  <!-- ══ RESULTS SCREEN ══ -->
-  <div id="screen-results" class="screen">
-    <div class="results-icon" id="results-icon">🎉</div>
-    <div class="results-title" id="results-title">Fantastic!</div>
-    <div class="results-subtitle" id="results-subtitle">You really know your capitals!</div>
-
-    <div class="score-circle">
-      <div class="big-num" id="final-score">0</div>
-      <div class="out-of" id="final-out-of">out of 15</div>
-    </div>
-
-    <div class="stats-row">
-      <div class="stat-box">
-        <div class="s-icon">✅</div>
-        <div class="s-label">Correct</div>
-        <div class="s-value" id="stat-correct">0</div>
-      </div>
-      <div class="stat-box">
-        <div class="s-icon">❌</div>
-        <div class="s-label">Wrong</div>
-        <div class="s-value" id="stat-wrong">0</div>
-      </div>
-      <div class="stat-box">
-        <div class="s-icon">📊</div>
-        <div class="s-label">Accuracy</div>
-        <div class="s-value" id="stat-accuracy">0%</div>
-      </div>
-    </div>
-
-    <div class="rank-badge">
-      <div class="rank-title" id="rank-title">🌟 World Explorer</div>
-      <div class="rank-desc" id="rank-desc">Keep learning about our amazing world!</div>
-    </div>
-
-    <div class="btn-row">
-      <button class="btn-secondary" id="btn-same-diff">Play Again</button>
-      <button class="btn-primary" id="btn-menu">Main Menu</button>
+<!-- ══ LIST ══ -->
+<div id="screen-list" class="screen">
+  <div class="list-header">
+    <div class="list-header-icon" id="list-icon"></div>
+    <div class="list-header-info">
+      <h2 id="list-title"></h2>
+      <p id="list-subtitle"></p>
     </div>
   </div>
+  <div class="exercise-list" id="exercise-list"></div>
+</div>
 
+<!-- ══ DETAIL ══ -->
+<div id="screen-detail" class="screen">
+  <div class="detail-header">
+    <div class="detail-machine-badge" id="detail-machine-badge"></div>
+    <div class="detail-name" id="detail-name"></div>
+    <div class="detail-tags" id="detail-tags"></div>
+  </div>
+  <div class="detail-body" id="detail-body"></div>
 </div>
 
 <script>
-// ══════════════════════════════════════════════
-//  QUESTION DATA
-// ══════════════════════════════════════════════
-const ALL_QUESTIONS = [
-  // Easy – well-known world capitals
-  { flag:"🇫🇷", q:"What is the capital of France?",       a:"Paris",         wrong:["London","Madrid","Berlin"],              cat:"Capital City", diff:"easy" },
-  { flag:"🇯🇵", q:"What is the capital of Japan?",        a:"Tokyo",         wrong:["Beijing","Seoul","Bangkok"],             cat:"Capital City", diff:"easy" },
-  { flag:"🇦🇺", q:"What is the capital of Australia?",    a:"Canberra",      wrong:["Sydney","Melbourne","Brisbane"],         cat:"Capital City", diff:"easy" },
-  { flag:"🇧🇷", q:"What is the capital of Brazil?",       a:"Brasília",      wrong:["Rio de Janeiro","São Paulo","Salvador"], cat:"Capital City", diff:"easy" },
-  { flag:"🇩🇪", q:"What is the capital of Germany?",      a:"Berlin",        wrong:["Munich","Hamburg","Frankfurt"],          cat:"Capital City", diff:"easy" },
-  { flag:"🇨🇦", q:"What is the capital of Canada?",       a:"Ottawa",        wrong:["Toronto","Vancouver","Montreal"],        cat:"Capital City", diff:"easy" },
-  { flag:"🇮🇹", q:"What is the capital of Italy?",        a:"Rome",          wrong:["Milan","Naples","Venice"],               cat:"Capital City", diff:"easy" },
-  { flag:"🇷🇺", q:"What is the capital of Russia?",       a:"Moscow",        wrong:["St. Petersburg","Novosibirsk","Kazan"],  cat:"Capital City", diff:"easy" },
-  { flag:"🇨🇳", q:"What is the capital of China?",        a:"Beijing",       wrong:["Shanghai","Guangzhou","Shenzhen"],       cat:"Capital City", diff:"easy" },
-  { flag:"🇺🇸", q:"What is the capital of the United States?", a:"Washington D.C.", wrong:["New York","Los Angeles","Chicago"], cat:"Capital City", diff:"easy" },
-  { flag:"🇬🇧", q:"What is the capital of the United Kingdom?", a:"London",  wrong:["Manchester","Edinburgh","Birmingham"],   cat:"Capital City", diff:"easy" },
-  { flag:"🇪🇸", q:"What is the capital of Spain?",        a:"Madrid",        wrong:["Barcelona","Seville","Valencia"],        cat:"Capital City", diff:"easy" },
-  // "Which country" questions – easy
-  { flag:"🗺️",  q:"Paris is the capital of which country?",      a:"France",      wrong:["Italy","Belgium","Switzerland"],       cat:"Which Country", diff:"easy" },
-  { flag:"🗺️",  q:"Tokyo is the capital of which country?",      a:"Japan",       wrong:["China","South Korea","Vietnam"],        cat:"Which Country", diff:"easy" },
-  { flag:"🗺️",  q:"Rome is the capital of which country?",       a:"Italy",       wrong:["Spain","Greece","Portugal"],            cat:"Which Country", diff:"easy" },
-  // Medium – less-obvious capitals
-  { flag:"🇲🇽", q:"What is the capital of Mexico?",        a:"Mexico City",   wrong:["Guadalajara","Monterrey","Puebla"],       cat:"Capital City", diff:"medium" },
-  { flag:"🇿🇦", q:"What is the capital of South Africa?",  a:"Pretoria",      wrong:["Cape Town","Johannesburg","Durban"],      cat:"Capital City", diff:"medium" },
-  { flag:"🇮🇳", q:"What is the capital of India?",         a:"New Delhi",     wrong:["Mumbai","Kolkata","Chennai"],             cat:"Capital City", diff:"medium" },
-  { flag:"🇪🇬", q:"What is the capital of Egypt?",         a:"Cairo",         wrong:["Alexandria","Luxor","Giza"],              cat:"Capital City", diff:"medium" },
-  { flag:"🇰🇪", q:"What is the capital of Kenya?",         a:"Nairobi",       wrong:["Mombasa","Kisumu","Nakuru"],              cat:"Capital City", diff:"medium" },
-  { flag:"🇦🇷", q:"What is the capital of Argentina?",     a:"Buenos Aires",  wrong:["Córdoba","Rosario","Mendoza"],            cat:"Capital City", diff:"medium" },
-  { flag:"🇹🇭", q:"What is the capital of Thailand?",      a:"Bangkok",       wrong:["Chiang Mai","Phuket","Pattaya"],          cat:"Capital City", diff:"medium" },
-  { flag:"🇵🇪", q:"What is the capital of Peru?",          a:"Lima",          wrong:["Cusco","Arequipa","Trujillo"],            cat:"Capital City", diff:"medium" },
-  { flag:"🇳🇬", q:"What is the capital of Nigeria?",       a:"Abuja",         wrong:["Lagos","Kano","Ibadan"],                  cat:"Capital City", diff:"medium" },
-  { flag:"🇵🇰", q:"What is the capital of Pakistan?",      a:"Islamabad",     wrong:["Karachi","Lahore","Peshawar"],            cat:"Capital City", diff:"medium" },
-  { flag:"🇸🇦", q:"What is the capital of Saudi Arabia?",  a:"Riyadh",        wrong:["Jeddah","Mecca","Medina"],               cat:"Capital City", diff:"medium" },
-  { flag:"🇹🇷", q:"What is the capital of Turkey?",        a:"Ankara",        wrong:["Istanbul","Izmir","Bursa"],              cat:"Capital City", diff:"medium" },
-  // "Which country" – medium
-  { flag:"🗺️",  q:"Nairobi is the capital of which country?",    a:"Kenya",        wrong:["Tanzania","Uganda","Ethiopia"],         cat:"Which Country", diff:"medium" },
-  { flag:"🗺️",  q:"Buenos Aires is the capital of which country?", a:"Argentina",  wrong:["Chile","Brazil","Uruguay"],             cat:"Which Country", diff:"medium" },
-  { flag:"🗺️",  q:"Canberra is the capital of which country?",   a:"Australia",   wrong:["New Zealand","Canada","South Africa"],  cat:"Which Country", diff:"medium" },
-  // Hard – tricky or lesser-known capitals
-  { flag:"🇨🇱", q:"What is the capital of Chile?",         a:"Santiago",      wrong:["Valparaíso","Concepción","Antofagasta"],  cat:"Capital City", diff:"hard" },
-  { flag:"🇸🇪", q:"What is the capital of Sweden?",        a:"Stockholm",     wrong:["Oslo","Copenhagen","Helsinki"],           cat:"Capital City", diff:"hard" },
-  { flag:"🇳🇴", q:"What is the capital of Norway?",        a:"Oslo",          wrong:["Bergen","Trondheim","Stavanger"],         cat:"Capital City", diff:"hard" },
-  { flag:"🇳🇿", q:"What is the capital of New Zealand?",   a:"Wellington",    wrong:["Auckland","Christchurch","Hamilton"],     cat:"Capital City", diff:"hard" },
-  { flag:"🇵🇹", q:"What is the capital of Portugal?",      a:"Lisbon",        wrong:["Porto","Faro","Braga"],                   cat:"Capital City", diff:"hard" },
-  { flag:"🇬🇷", q:"What is the capital of Greece?",        a:"Athens",        wrong:["Thessaloniki","Patras","Heraklion"],      cat:"Capital City", diff:"hard" },
-  { flag:"🇺🇦", q:"What is the capital of Ukraine?",       a:"Kyiv",          wrong:["Kharkiv","Odesa","Lviv"],                 cat:"Capital City", diff:"hard" },
-  { flag:"🇲🇦", q:"What is the capital of Morocco?",       a:"Rabat",         wrong:["Casablanca","Marrakesh","Fez"],           cat:"Capital City", diff:"hard" },
-  { flag:"🇮🇩", q:"What is the capital of Indonesia?",     a:"Jakarta",       wrong:["Bali","Surabaya","Bandung"],              cat:"Capital City", diff:"hard" },
-  { flag:"🇵🇭", q:"What is the capital of the Philippines?", a:"Manila",      wrong:["Cebu","Davao","Quezon City"],             cat:"Capital City", diff:"hard" },
-  { flag:"🇨🇴", q:"What is the capital of Colombia?",      a:"Bogotá",        wrong:["Medellín","Cali","Barranquilla"],         cat:"Capital City", diff:"hard" },
-  { flag:"🇻🇳", q:"What is the capital of Vietnam?",       a:"Hanoi",         wrong:["Ho Chi Minh City","Da Nang","Hue"],       cat:"Capital City", diff:"hard" },
-  // "Which country" – hard
-  { flag:"🗺️",  q:"Wellington is the capital of which country?", a:"New Zealand",  wrong:["Australia","Fiji","Papua New Guinea"],  cat:"Which Country", diff:"hard" },
-  { flag:"🗺️",  q:"Rabat is the capital of which country?",      a:"Morocco",      wrong:["Algeria","Tunisia","Libya"],            cat:"Which Country", diff:"hard" },
-  { flag:"🗺️",  q:"Bogotá is the capital of which country?",     a:"Colombia",     wrong:["Venezuela","Ecuador","Peru"],           cat:"Which Country", diff:"hard" },
-];
-
-// ══════════════════════════════════════════════
-//  CONFIG
-// ══════════════════════════════════════════════
-const QUESTIONS_PER_QUIZ = 15;
-
-const RANKS = [
-  { min: 0.9,  title:"🌟 World Explorer",     desc:"Outstanding! You're a geography genius!" },
-  { min: 0.75, title:"🌎 Globe Trotter",       desc:"Great job! You know the world really well!" },
-  { min: 0.6,  title:"🗺️ Map Reader",          desc:"Nice work! Keep exploring the world!" },
-  { min: 0.4,  title:"✈️ Curious Traveller",   desc:"Good effort! Practice makes perfect!" },
-  { min: 0,    title:"🌱 Young Adventurer",    desc:"Keep going — every explorer starts somewhere!" },
-];
-
-// ══════════════════════════════════════════════
-//  STATE
-// ══════════════════════════════════════════════
-let selectedDiff   = "easy";
-let quizQuestions  = [];
-let currentIndex   = 0;
-let score          = 0;
-let answered       = false;
-
-// ══════════════════════════════════════════════
-//  HELPERS
-// ══════════════════════════════════════════════
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
+const DATA = [
+  {
+    id: "chest",
+    name: "Chest",
+    icon: "&#128170;",
+    color: "#e63946",
+    desc: "Pectorals & pushing muscles",
+    exercises: [
+      {
+        name: "Flat Barbell Bench Press",
+        machine: "Flat Bench + Barbell",
+        icon: "&#127947;",
+        difficulty: "Intermediate",
+        sets: "3–5 sets",
+        reps: "5–12 reps",
+        rest: "90–120 sec",
+        primaryMuscles: ["Pectoralis Major"],
+        secondaryMuscles: ["Anterior Deltoid", "Triceps Brachii"],
+        instructions: [
+          "Lie flat on the bench with eyes under the bar. Grip the bar slightly wider than shoulder-width.",
+          "Retract your shoulder blades and plant your feet firmly on the floor.",
+          "Unrack the bar and hold it directly over your chest with arms fully extended.",
+          "Lower the bar to your mid-chest in a controlled arc, letting your elbows flare to about 75°.",
+          "Press the bar back up explosively until arms are fully extended.",
+          "Re-rack the bar carefully after completing all reps."
+        ],
+        tips: [
+          "Keep your wrists straight — do not let them bend backward.",
+          "Avoid bouncing the bar off your chest.",
+          "Drive your feet into the floor throughout the movement.",
+          "Maintain a slight natural arch in your lower back."
+        ]
+      },
+      {
+        name: "Incline Dumbbell Press",
+        machine: "Incline Bench + Dumbbells",
+        icon: "&#127947;",
+        difficulty: "Beginner",
+        sets: "3–4 sets",
+        reps: "8–15 reps",
+        rest: "60–90 sec",
+        primaryMuscles: ["Upper Pectoralis Major"],
+        secondaryMuscles: ["Anterior Deltoid", "Triceps Brachii"],
+        instructions: [
+          "Set the bench to 30–45°. Sit back and hold a dumbbell in each hand on your thighs.",
+          "Kick the dumbbells up to shoulder height as you lie back.",
+          "Start with dumbbells at chest level, palms facing forward.",
+          "Press both dumbbells up and in until they almost touch above your upper chest.",
+          "Lower slowly back to the starting position."
+        ],
+        tips: [
+          "A 30° incline emphasises the upper chest more than a 45° angle.",
+          "Don't let the dumbbells drift over your face — keep the path over the upper chest.",
+          "Squeeze your chest at the top of each rep."
+        ]
+      },
+      {
+        name: "Chest Cable Fly",
+        machine: "Cable Machine (dual pulley)",
+        icon: "&#128259;",
+        difficulty: "Beginner",
+        sets: "3–4 sets",
+        reps: "12–15 reps",
+        rest: "45–60 sec",
+        primaryMuscles: ["Pectoralis Major"],
+        secondaryMuscles: ["Anterior Deltoid", "Biceps (stabiliser)"],
+        instructions: [
+          "Set both pulleys to chest height. Stand in the centre and take one handle in each hand.",
+          "Step forward so the cables are taut. Stand in a slight split stance for balance.",
+          "With a slight bend in your elbows, bring your hands together in a wide arc in front of your chest.",
+          "Pause and squeeze your chest hard at the peak contraction.",
+          "Slowly return your arms to the starting position, feeling a deep chest stretch."
+        ],
+        tips: [
+          "The elbow angle should stay fixed throughout — this is not a pressing movement.",
+          "Adjust pulley height: high to hit lower chest, low to hit upper chest.",
+          "Control the eccentric (return) phase — do not let cables snap your arms back."
+        ]
+      },
+      {
+        name: "Machine Chest Press",
+        machine: "Chest Press Machine",
+        icon: "&#9898;",
+        difficulty: "Beginner",
+        sets: "3–4 sets",
+        reps: "10–15 reps",
+        rest: "60 sec",
+        primaryMuscles: ["Pectoralis Major"],
+        secondaryMuscles: ["Triceps Brachii", "Anterior Deltoid"],
+        instructions: [
+          "Adjust the seat so handles align with your mid-chest.",
+          "Sit back with your shoulder blades pressed into the pad.",
+          "Grip the handles with an overhand grip, elbows at about 90°.",
+          "Press the handles forward until your arms are almost fully extended.",
+          "Return slowly to the starting position without letting the weight stack touch down."
+        ],
+        tips: [
+          "Great for beginners — the machine guides the movement path.",
+          "Keep your back firmly against the seat pad throughout.",
+          "Do not lock out your elbows forcefully at the top."
+        ]
+      },
+      {
+        name: "Dips (Chest-Focused)",
+        machine: "Parallel Dip Bars / Assisted Dip Machine",
+        icon: "&#128296;",
+        difficulty: "Intermediate",
+        sets: "3–4 sets",
+        reps: "8–12 reps",
+        rest: "60–90 sec",
+        primaryMuscles: ["Lower Pectoralis Major"],
+        secondaryMuscles: ["Triceps Brachii", "Anterior Deltoid"],
+        instructions: [
+          "Grip the bars and support your body at arm's length.",
+          "Lean forward 20–30° to shift emphasis onto the chest.",
+          "Lower yourself until your elbows reach 90°, feeling a stretch in your chest.",
+          "Press back up to the starting position without fully locking out.",
+          "For assisted dips, select the appropriate counterweight on the machine."
+        ],
+        tips: [
+          "Leaning forward = more chest. Staying upright = more triceps.",
+          "Avoid shrugging your shoulders — keep them depressed.",
+          "Use bodyweight first; add a weight belt only when you can do 15+ clean reps."
+        ]
+      }
+    ]
+  },
+  {
+    id: "back",
+    name: "Back",
+    icon: "&#127992;",
+    color: "#2a9d8f",
+    desc: "Lats, traps & rhomboids",
+    exercises: [
+      {
+        name: "Lat Pulldown",
+        machine: "Lat Pulldown Machine",
+        icon: "&#11015;",
+        difficulty: "Beginner",
+        sets: "3–4 sets",
+        reps: "10–15 reps",
+        rest: "60–90 sec",
+        primaryMuscles: ["Latissimus Dorsi"],
+        secondaryMuscles: ["Biceps Brachii", "Rear Deltoid", "Rhomboids"],
+        instructions: [
+          "Sit and adjust the thigh pad to hold your legs securely.",
+          "Grip the bar wider than shoulder-width with an overhand grip.",
+          "Lean back slightly and pull the bar down to your upper chest.",
+          "Squeeze your lats at the bottom, holding for a moment.",
+          "Slowly extend your arms back to the start, feeling a full lat stretch."
+        ],
+        tips: [
+          "Lead with your elbows, not your hands.",
+          "Avoid pulling the bar behind the neck — it stresses the cervical spine.",
+          "Use a full range of motion for maximum lat activation."
+        ]
+      },
+      {
+        name: "Seated Cable Row",
+        machine: "Low Cable Row Machine",
+        icon: "&#11013;",
+        difficulty: "Beginner",
+        sets: "3–4 sets",
+        reps: "10–15 reps",
+        rest: "60–90 sec",
+        primaryMuscles: ["Latissimus Dorsi", "Rhomboids"],
+        secondaryMuscles: ["Biceps Brachii", "Rear Deltoid", "Trapezius"],
+        instructions: [
+          "Sit on the bench with feet on the footrests, knees slightly bent.",
+          "Reach forward and grip the handle, keeping your back flat.",
+          "Row the handle into your lower abdomen, driving your elbows back.",
+          "Squeeze your shoulder blades together at the end of the movement.",
+          "Slowly extend your arms back to the start position."
+        ],
+        tips: [
+          "Do not round your lower back — hinge from the hips slightly.",
+          "Keep your torso relatively upright; avoid excessive swinging.",
+          "A V-bar attachment emphasises the lats; a wide bar hits the upper back more."
+        ]
+      },
+      {
+        name: "Barbell Bent-Over Row",
+        machine: "Barbell",
+        icon: "&#127947;",
+        difficulty: "Advanced",
+        sets: "3–5 sets",
+        reps: "5–10 reps",
+        rest: "90–120 sec",
+        primaryMuscles: ["Latissimus Dorsi", "Trapezius"],
+        secondaryMuscles: ["Biceps Brachii", "Rear Deltoid", "Rhomboids", "Erector Spinae"],
+        instructions: [
+          "Stand with feet shoulder-width apart, barbell over mid-foot.",
+          "Hinge at the hips until your torso is about 45° from vertical, knees slightly bent.",
+          "Grip the bar just outside your legs with an overhand grip.",
+          "Row the bar to your lower chest / upper abdomen by driving your elbows back.",
+          "Lower the bar back to the start in a controlled manner."
+        ],
+        tips: [
+          "Keep your spine neutral — do not round your lower back under load.",
+          "Brace your core like you are about to take a punch.",
+          "Breathe in before each rep; breathe out at the top."
+        ]
+      },
+      {
+        name: "T-Bar Row",
+        machine: "T-Bar Row Machine / Landmine",
+        icon: "&#128296;",
+        difficulty: "Intermediate",
+        sets: "3–4 sets",
+        reps: "8–12 reps",
+        rest: "90 sec",
+        primaryMuscles: ["Latissimus Dorsi", "Rhomboids"],
+        secondaryMuscles: ["Biceps Brachii", "Rear Deltoid", "Trapezius"],
+        instructions: [
+          "Stand over the bar with feet on either side, straddling it.",
+          "Hinge at the hips until your chest is close to the chest pad (if using machine).",
+          "Grip the handles and row the bar up to your chest.",
+          "Squeeze your back at the top of the movement.",
+          "Lower under control to full arm extension."
+        ],
+        tips: [
+          "Use a closer grip to target the lats; wider grip for upper back.",
+          "Keep the bar close to your body throughout.",
+          "Avoid jerking the weight up — use a controlled tempo."
+        ]
+      },
+      {
+        name: "Cable Face Pull",
+        machine: "Cable Machine with Rope Attachment",
+        icon: "&#128259;",
+        difficulty: "Beginner",
+        sets: "3–4 sets",
+        reps: "15–20 reps",
+        rest: "45 sec",
+        primaryMuscles: ["Rear Deltoid", "Trapezius"],
+        secondaryMuscles: ["Rhomboids", "Rotator Cuff"],
+        instructions: [
+          "Set the cable to head height with a rope attachment.",
+          "Grip both ends of the rope and step back so the cable is taut.",
+          "Pull the rope toward your face, separating your hands as they reach your temples.",
+          "Hold the peak contraction for one second, focusing on squeezing your rear delts.",
+          "Slowly return to the starting position."
+        ],
+        tips: [
+          "Keep your elbows high — level with or slightly above your shoulders.",
+          "This exercise improves shoulder health and posture significantly.",
+          "Use lighter weight and focus on the squeeze rather than heavy loads."
+        ]
+      }
+    ]
+  },
+  {
+    id: "shoulders",
+    name: "Shoulders",
+    icon: "&#9898;",
+    color: "#f4a261",
+    desc: "Deltoids & rotator cuff",
+    exercises: [
+      {
+        name: "Overhead Press (OHP)",
+        machine: "Barbell or Smith Machine",
+        icon: "&#11014;",
+        difficulty: "Intermediate",
+        sets: "3–5 sets",
+        reps: "5–10 reps",
+        rest: "90–120 sec",
+        primaryMuscles: ["Anterior Deltoid", "Medial Deltoid"],
+        secondaryMuscles: ["Triceps Brachii", "Upper Trapezius", "Serratus Anterior"],
+        instructions: [
+          "Stand with feet shoulder-width apart, barbell across your upper chest.",
+          "Grip the bar just outside shoulder-width, elbows slightly forward.",
+          "Brace your core and glutes. Press the bar straight overhead.",
+          "Move your head back slightly to clear the bar's path, then return it forward once the bar passes.",
+          "Lock out your elbows at the top, then lower the bar back to your chest."
+        ],
+        tips: [
+          "Keep your ribcage down — do not hyperextend your lower back.",
+          "Squeeze your glutes to protect your spine during the press.",
+          "The bar should travel in a nearly straight line overhead."
+        ]
+      },
+      {
+        name: "Dumbbell Lateral Raise",
+        machine: "Dumbbells",
+        icon: "&#128259;",
+        difficulty: "Beginner",
+        sets: "3–4 sets",
+        reps: "12–20 reps",
+        rest: "45–60 sec",
+        primaryMuscles: ["Medial Deltoid"],
+        secondaryMuscles: ["Anterior Deltoid", "Upper Trapezius"],
+        instructions: [
+          "Stand holding dumbbells at your sides with a neutral grip.",
+          "Keeping a slight bend in your elbows, raise both arms out to the sides.",
+          "Lift until your hands are at shoulder height — no higher.",
+          "Lead with your elbows and think about pouring water out of your pinky-side.",
+          "Lower slowly, taking about 2–3 seconds on the way down."
+        ],
+        tips: [
+          "Use lighter weight than you think — form breaks down quickly with too much load.",
+          "Avoid shrugging your traps; keep your shoulders depressed.",
+          "The slow eccentric is where much of the muscle stimulus comes from."
+        ]
+      },
+      {
+        name: "Seated Machine Shoulder Press",
+        machine: "Shoulder Press Machine",
+        icon: "&#9898;",
+        difficulty: "Beginner",
+        sets: "3–4 sets",
+        reps: "10–15 reps",
+        rest: "60 sec",
+        primaryMuscles: ["Anterior Deltoid", "Medial Deltoid"],
+        secondaryMuscles: ["Triceps Brachii", "Upper Trapezius"],
+        instructions: [
+          "Adjust the seat so the handles are at shoulder height.",
+          "Sit back and grip the handles with palms facing forward.",
+          "Press the handles overhead until arms are nearly extended.",
+          "Lower slowly back to shoulder height."
+        ],
+        tips: [
+          "Keep your core engaged and back against the pad.",
+          "Do not lock out your elbows forcefully at the top.",
+          "Ideal for beginners learning pressing mechanics safely."
+        ]
+      },
+      {
+        name: "Cable Lateral Raise",
+        machine: "Cable Machine (low pulley)",
+        icon: "&#128259;",
+        difficulty: "Beginner",
+        sets: "3–4 sets",
+        reps: "12–15 reps per side",
+        rest: "45 sec",
+        primaryMuscles: ["Medial Deltoid"],
+        secondaryMuscles: ["Anterior Deltoid"],
+        instructions: [
+          "Set the cable to the lowest position. Stand sideways to the machine.",
+          "Grip the handle with the hand furthest from the machine (cross-body).",
+          "With a slight elbow bend, raise your arm out to the side to shoulder height.",
+          "Lower slowly back to the start.",
+          "Complete all reps on one side before switching."
+        ],
+        tips: [
+          "Cable provides constant tension unlike dumbbells — great for muscle growth.",
+          "Keep the movement smooth and controlled.",
+          "Brace against the machine frame lightly for balance."
+        ]
+      },
+      {
+        name: "Arnold Press",
+        machine: "Dumbbells",
+        icon: "&#128170;",
+        difficulty: "Intermediate",
+        sets: "3–4 sets",
+        reps: "10–12 reps",
+        rest: "60–90 sec",
+        primaryMuscles: ["Anterior Deltoid", "Medial Deltoid"],
+        secondaryMuscles: ["Posterior Deltoid", "Triceps Brachii"],
+        instructions: [
+          "Sit on a bench and hold dumbbells at shoulder height with palms facing you.",
+          "As you press up, rotate your forearms outward so palms face forward at the top.",
+          "Press fully overhead with arms extended.",
+          "Reverse the rotation as you lower the dumbbells back to the start."
+        ],
+        tips: [
+          "The rotation recruits more of the deltoid head than a standard press.",
+          "Move at a controlled pace — this is not a speed exercise.",
+          "Named after Arnold Schwarzenegger, who popularised the movement."
+        ]
+      }
+    ]
+  },
+  {
+    id: "biceps",
+    name: "Biceps",
+    icon: "&#128170;",
+    color: "#e9c46a",
+    desc: "Biceps & forearm flexors",
+    exercises: [
+      {
+        name: "Barbell Curl",
+        machine: "Barbell (EZ or Straight)",
+        icon: "&#127947;",
+        difficulty: "Beginner",
+        sets: "3–4 sets",
+        reps: "8–12 reps",
+        rest: "60 sec",
+        primaryMuscles: ["Biceps Brachii"],
+        secondaryMuscles: ["Brachialis", "Brachioradialis"],
+        instructions: [
+          "Stand holding the barbell at hip height with an underhand (supinated) grip.",
+          "Keep your elbows pinned to your sides.",
+          "Curl the bar up toward your chest by flexing your elbows.",
+          "Squeeze your biceps hard at the top.",
+          "Lower the bar slowly (2–3 seconds) back to the starting position."
+        ],
+        tips: [
+          "Avoid swinging your torso — isolate the movement at the elbow.",
+          "An EZ-bar reduces wrist strain for most people.",
+          "Full extension at the bottom maximises the range of motion."
+        ]
+      },
+      {
+        name: "Cable Curl",
+        machine: "Cable Machine (low pulley, straight or EZ bar attachment)",
+        icon: "&#128259;",
+        difficulty: "Beginner",
+        sets: "3–4 sets",
+        reps: "12–15 reps",
+        rest: "45–60 sec",
+        primaryMuscles: ["Biceps Brachii"],
+        secondaryMuscles: ["Brachialis"],
+        instructions: [
+          "Attach a straight or EZ-bar to the low pulley.",
+          "Stand close to the machine and grip the bar underhand.",
+          "Curl up, keeping your elbows fixed at your sides.",
+          "Squeeze at the top and slowly lower back down."
+        ],
+        tips: [
+          "Cables maintain constant tension through the full range of motion.",
+          "Try rope attachment for a neutral-grip curl variation.",
+          "Keep your wrists neutral — do not let them bend back."
+        ]
+      },
+      {
+        name: "Preacher Curl",
+        machine: "Preacher Curl Machine / EZ Bar + Preacher Bench",
+        icon: "&#128296;",
+        difficulty: "Beginner",
+        sets: "3–4 sets",
+        reps: "10–15 reps",
+        rest: "60 sec",
+        primaryMuscles: ["Biceps Brachii (long head)"],
+        secondaryMuscles: ["Brachialis"],
+        instructions: [
+          "Adjust the seat so your upper arms rest flat on the pad.",
+          "Grip the handles or bar with an underhand grip.",
+          "Curl the weight up to chin level, squeezing your biceps at the top.",
+          "Lower slowly to full extension without letting your arms bounce off the pad."
+        ],
+        tips: [
+          "The pad prevents cheating — a great isolation exercise.",
+          "Do not hyperextend your elbows at the bottom.",
+          "Go lighter than you think; the range of motion is demanding."
+        ]
+      },
+      {
+        name: "Hammer Curl",
+        machine: "Dumbbells",
+        icon: "&#128296;",
+        difficulty: "Beginner",
+        sets: "3–4 sets",
+        reps: "10–15 reps per side",
+        rest: "45–60 sec",
+        primaryMuscles: ["Brachialis", "Brachioradialis"],
+        secondaryMuscles: ["Biceps Brachii"],
+        instructions: [
+          "Stand holding dumbbells at your sides with a neutral grip (palms facing each other).",
+          "Curl one or both dumbbells up while keeping the neutral grip throughout.",
+          "Keep elbows tucked and stationary.",
+          "Lower slowly back to the start."
+        ],
+        tips: [
+          "Targets the brachialis which sits under the bicep and adds arm thickness.",
+          "Alternate arms to allow slightly more focus on each side.",
+          "Can be done seated or standing."
+        ]
+      }
+    ]
+  },
+  {
+    id: "triceps",
+    name: "Triceps",
+    icon: "&#9855;",
+    color: "#e76f51",
+    desc: "Triceps & elbow extensors",
+    exercises: [
+      {
+        name: "Tricep Pushdown (Rope)",
+        machine: "Cable Machine (high pulley, rope attachment)",
+        icon: "&#11015;",
+        difficulty: "Beginner",
+        sets: "3–4 sets",
+        reps: "12–15 reps",
+        rest: "45–60 sec",
+        primaryMuscles: ["Triceps Brachii (lateral head)"],
+        secondaryMuscles: ["Triceps Brachii (medial head)"],
+        instructions: [
+          "Attach a rope to the high pulley. Stand facing the machine.",
+          "Grip both ends of the rope at chest height with your elbows at your sides.",
+          "Push the rope down until your arms are fully extended, spreading the rope apart at the bottom.",
+          "Hold the contraction, then slowly return to the starting position."
+        ],
+        tips: [
+          "Keep your upper arms pinned to your sides throughout.",
+          "Flaring the rope at the bottom increases lateral head activation.",
+          "Lean very slightly forward at the hips for stability."
+        ]
+      },
+      {
+        name: "Overhead Tricep Extension",
+        machine: "Cable Machine / Dumbbell",
+        icon: "&#11014;",
+        difficulty: "Beginner",
+        sets: "3–4 sets",
+        reps: "12–15 reps",
+        rest: "60 sec",
+        primaryMuscles: ["Triceps Brachii (long head)"],
+        secondaryMuscles: ["Triceps Brachii (medial head)"],
+        instructions: [
+          "Set the cable to its lowest point with a rope attachment, or hold one dumbbell with both hands.",
+          "Raise the cable/dumbbell overhead with elbows pointing forward.",
+          "Lower the weight behind your head by bending only at the elbows.",
+          "Extend back up to full lockout, squeezing the triceps."
+        ],
+        tips: [
+          "The overhead position stretches the long head — essential for full tricep development.",
+          "Keep your elbows close together and pointing toward the ceiling.",
+          "Do not arch your lower back excessively."
+        ]
+      },
+      {
+        name: "Skull Crusher",
+        machine: "Flat Bench + EZ Bar or Dumbbells",
+        icon: "&#128128;",
+        difficulty: "Intermediate",
+        sets: "3–4 sets",
+        reps: "10–12 reps",
+        rest: "60–90 sec",
+        primaryMuscles: ["Triceps Brachii (long & medial head)"],
+        secondaryMuscles: [],
+        instructions: [
+          "Lie on a flat bench holding an EZ bar with an overhand grip, arms extended above your chest.",
+          "Keeping your upper arms perpendicular to the floor, bend your elbows to lower the bar toward your forehead.",
+          "Stop just before the bar reaches your forehead, then press back to the start."
+        ],
+        tips: [
+          "Lower the bar to your forehead (hence the name) — not behind your head.",
+          "Keep upper arms completely stationary.",
+          "An EZ bar reduces wrist and elbow strain compared to a straight bar."
+        ]
+      },
+      {
+        name: "Tricep Dips (Machine)",
+        machine: "Assisted Dip Machine",
+        icon: "&#128296;",
+        difficulty: "Beginner",
+        sets: "3–4 sets",
+        reps: "10–15 reps",
+        rest: "60 sec",
+        primaryMuscles: ["Triceps Brachii"],
+        secondaryMuscles: ["Anterior Deltoid", "Lower Pectoralis Major"],
+        instructions: [
+          "Select a counterweight on the machine if needed.",
+          "Kneel or stand on the assist platform and grip the handles.",
+          "Keep your torso upright to target the triceps.",
+          "Lower yourself until your elbows are at 90°, then press back up.",
+          "Squeeze your triceps at the top of each rep."
+        ],
+        tips: [
+          "Staying upright shifts focus to the triceps; leaning forward shifts it to the chest.",
+          "Reduce the counterweight as you get stronger.",
+          "Full range of motion is key for tricep development."
+        ]
+      }
+    ]
+  },
+  {
+    id: "legs",
+    name: "Legs",
+    icon: "&#127939;",
+    color: "#4cc9f0",
+    desc: "Quads, hamstrings & glutes",
+    exercises: [
+      {
+        name: "Barbell Back Squat",
+        machine: "Squat Rack + Barbell",
+        icon: "&#127947;",
+        difficulty: "Advanced",
+        sets: "3–5 sets",
+        reps: "5–10 reps",
+        rest: "2–3 min",
+        primaryMuscles: ["Quadriceps", "Glutes"],
+        secondaryMuscles: ["Hamstrings", "Erector Spinae", "Adductors", "Core"],
+        instructions: [
+          "Set the bar at upper-chest height on the rack. Step under and rest it across your upper traps.",
+          "Grip the bar wider than shoulder-width. Unrack and step back with feet shoulder-width apart, toes turned slightly out.",
+          "Brace your core hard. Begin the descent by pushing your knees out and hips back simultaneously.",
+          "Squat down until your hips are at or below knee level (depth depends on mobility).",
+          "Drive through your heels to stand back up, keeping your chest tall."
+        ],
+        tips: [
+          "Keep your chest up and spine neutral throughout.",
+          "Push your knees out in the direction of your toes.",
+          "Brace your entire core — not just your abs — before each rep."
+        ]
+      },
+      {
+        name: "Leg Press",
+        machine: "Leg Press Machine",
+        icon: "&#11014;",
+        difficulty: "Beginner",
+        sets: "3–4 sets",
+        reps: "10–15 reps",
+        rest: "90 sec",
+        primaryMuscles: ["Quadriceps", "Glutes"],
+        secondaryMuscles: ["Hamstrings", "Adductors"],
+        instructions: [
+          "Sit in the machine and place your feet shoulder-width apart on the platform.",
+          "Release the safety handles and lower the platform by bending your knees to 90°.",
+          "Press the platform back to the start without locking out your knees.",
+          "Re-engage the safety handles after completing all reps."
+        ],
+        tips: [
+          "Higher foot placement targets glutes and hamstrings more; lower targets quads.",
+          "Never lock out your knees at the top — keep a slight bend.",
+          "Do not let your lower back peel off the seat at the bottom."
+        ]
+      },
+      {
+        name: "Leg Curl (Lying)",
+        machine: "Lying Leg Curl Machine",
+        icon: "&#11015;",
+        difficulty: "Beginner",
+        sets: "3–4 sets",
+        reps: "10–15 reps",
+        rest: "60 sec",
+        primaryMuscles: ["Hamstrings"],
+        secondaryMuscles: ["Gastrocnemius (calves)"],
+        instructions: [
+          "Adjust the machine so the pad sits just above your heels.",
+          "Lie face down and grip the handles.",
+          "Curl your legs up toward your glutes as far as possible.",
+          "Squeeze your hamstrings at the top for a count of one.",
+          "Lower slowly back to the start."
+        ],
+        tips: [
+          "Keep your hips pressed into the pad — do not let them rise.",
+          "Point your toes slightly to increase hamstring activation.",
+          "Control the lowering phase — do not let the weight drop."
+        ]
+      },
+      {
+        name: "Leg Extension",
+        machine: "Leg Extension Machine",
+        icon: "&#11014;",
+        difficulty: "Beginner",
+        sets: "3–4 sets",
+        reps: "12–15 reps",
+        rest: "60 sec",
+        primaryMuscles: ["Quadriceps"],
+        secondaryMuscles: [],
+        instructions: [
+          "Sit in the machine with your back against the pad and the roller pad above your feet.",
+          "Extend your legs to full straightness at the top.",
+          "Hold the peak contraction for a second.",
+          "Lower slowly back to the starting position."
+        ],
+        tips: [
+          "An isolation exercise — best used as a complement to compound movements.",
+          "Avoid jerking the weight up; use a controlled tempo.",
+          "Some people experience knee discomfort — reduce weight or avoid if so."
+        ]
+      },
+      {
+        name: "Hip Thrust",
+        machine: "Hip Thrust Machine / Bench + Barbell",
+        icon: "&#128296;",
+        difficulty: "Beginner",
+        sets: "3–4 sets",
+        reps: "12–15 reps",
+        rest: "60–90 sec",
+        primaryMuscles: ["Gluteus Maximus"],
+        secondaryMuscles: ["Hamstrings", "Quadriceps", "Core"],
+        instructions: [
+          "Sit with your upper back against a bench, barbell across your hips (use a pad for comfort).",
+          "Plant your feet flat on the floor, knees at 90° when at the top.",
+          "Drive your hips upward by squeezing your glutes until your body forms a straight line.",
+          "Hold the top position for a count of two.",
+          "Lower back down without letting your hips touch the floor."
+        ],
+        tips: [
+          "The best exercise for glute isolation and growth.",
+          "Keep your chin tucked to maintain a neutral spine.",
+          "Drive through your heels, not your toes."
+        ]
+      },
+      {
+        name: "Calf Raise (Machine)",
+        machine: "Standing or Seated Calf Raise Machine",
+        icon: "&#11014;",
+        difficulty: "Beginner",
+        sets: "4–5 sets",
+        reps: "15–20 reps",
+        rest: "45 sec",
+        primaryMuscles: ["Gastrocnemius", "Soleus"],
+        secondaryMuscles: [],
+        instructions: [
+          "Place the balls of your feet on the platform edge, heels hanging off.",
+          "Lower your heels as far as possible to get a deep stretch.",
+          "Press up onto your toes as high as possible.",
+          "Hold the peak for a count of one, then lower slowly."
+        ],
+        tips: [
+          "Seated calf raises target the soleus more; standing targets the gastrocnemius more.",
+          "Calves are very resistant to training — use high reps and slow tempo.",
+          "Full range of motion (deep stretch at the bottom) is critical."
+        ]
+      }
+    ]
+  },
+  {
+    id: "core",
+    name: "Core & Abs",
+    icon: "&#128170;",
+    color: "#b5838d",
+    desc: "Abdominals & stabilisers",
+    exercises: [
+      {
+        name: "Cable Crunch",
+        machine: "Cable Machine (high pulley, rope attachment)",
+        icon: "&#11015;",
+        difficulty: "Beginner",
+        sets: "3–4 sets",
+        reps: "15–20 reps",
+        rest: "45–60 sec",
+        primaryMuscles: ["Rectus Abdominis"],
+        secondaryMuscles: ["Obliques"],
+        instructions: [
+          "Attach a rope to the high pulley. Kneel facing the machine.",
+          "Hold the rope ends beside your head with elbows bent.",
+          "Crunch downward, bringing your elbows toward your knees.",
+          "Fully contract your abs at the bottom, then slowly return to the start."
+        ],
+        tips: [
+          "The movement should come from your abs, not from pulling with your arms.",
+          "Keep your hips stationary — do not sit back as you crunch.",
+          "Add resistance gradually as you get stronger."
+        ]
+      },
+      {
+        name: "Ab Rollout",
+        machine: "Ab Wheel / Barbell",
+        icon: "&#128259;",
+        difficulty: "Advanced",
+        sets: "3–4 sets",
+        reps: "8–12 reps",
+        rest: "60–90 sec",
+        primaryMuscles: ["Rectus Abdominis", "Transverse Abdominis"],
+        secondaryMuscles: ["Obliques", "Hip Flexors", "Lats"],
+        instructions: [
+          "Kneel on the floor holding the ab wheel or barbell in front of you.",
+          "Roll the wheel forward slowly, extending your body toward the floor.",
+          "Go as far as you can without your hips dropping or back arching.",
+          "Contract your core and pull the wheel back to the starting position."
+        ],
+        tips: [
+          "One of the most effective core exercises — but very demanding.",
+          "Start with partial reps if you cannot complete a full rollout.",
+          "Keep your arms straight and move slowly."
+        ]
+      },
+      {
+        name: "Plank",
+        machine: "Bodyweight / Mat",
+        icon: "&#128296;",
+        difficulty: "Beginner",
+        sets: "3–4 sets",
+        reps: "30–60 sec hold",
+        rest: "45 sec",
+        primaryMuscles: ["Transverse Abdominis", "Rectus Abdominis"],
+        secondaryMuscles: ["Obliques", "Glutes", "Shoulder Stabilisers"],
+        instructions: [
+          "Place your forearms on the floor, elbows below your shoulders.",
+          "Extend your legs behind you, supporting your weight on your toes.",
+          "Create a straight line from your head to your heels.",
+          "Brace your core, squeeze your glutes, and hold the position.",
+          "Breathe steadily throughout the hold."
+        ],
+        tips: [
+          "Do not let your hips sag or pike up.",
+          "Squeeze every muscle — glutes, core, and legs — simultaneously.",
+          "Quality beats duration: 30 s of perfect form beats 90 s of poor form."
+        ]
+      },
+      {
+        name: "Hanging Leg Raise",
+        machine: "Pull-Up Bar / Captain's Chair",
+        icon: "&#11015;",
+        difficulty: "Intermediate",
+        sets: "3–4 sets",
+        reps: "10–15 reps",
+        rest: "60 sec",
+        primaryMuscles: ["Rectus Abdominis (lower)", "Hip Flexors"],
+        secondaryMuscles: ["Obliques", "Transverse Abdominis"],
+        instructions: [
+          "Hang from a pull-up bar with an overhand grip, arms fully extended.",
+          "Keeping your legs together, raise them until they are parallel to the floor (or higher).",
+          "Hold at the top for a moment, then lower slowly.",
+          "Do not swing — control the movement throughout."
+        ],
+        tips: [
+          "Beginners can start with knee raises instead of straight-leg raises.",
+          "A captain's chair (padded arm support) makes the movement easier to control.",
+          "Exhale as you raise your legs; inhale on the way down."
+        ]
+      },
+      {
+        name: "Oblique Cable Twist",
+        machine: "Cable Machine",
+        icon: "&#128259;",
+        difficulty: "Beginner",
+        sets: "3 sets",
+        reps: "15 reps per side",
+        rest: "45 sec",
+        primaryMuscles: ["Obliques"],
+        secondaryMuscles: ["Rectus Abdominis", "Transverse Abdominis"],
+        instructions: [
+          "Set the cable to shoulder height. Stand sideways to the machine.",
+          "Hold the handle with both hands, arms extended.",
+          "Rotate your torso away from the machine in a controlled arc.",
+          "Return slowly to the starting position.",
+          "Complete all reps on one side before switching."
+        ],
+        tips: [
+          "Keep your hips facing forward — only your torso should rotate.",
+          "Do not use your arms to pull; initiate the movement with your obliques.",
+          "Pivot on your back foot slightly as you rotate."
+        ]
+      }
+    ]
   }
-  return a;
-}
+];
+
+// State
+let currentPart = null;
+let currentExercise = null;
+let navHistory = [];
 
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'instant' });
 }
 
-function buildQuiz(diff) {
-  const pool = ALL_QUESTIONS.filter(q => q.diff === diff);
-  const shuffled = shuffle(pool);
-  return shuffled.slice(0, Math.min(QUESTIONS_PER_QUIZ, shuffled.length));
+function updateNav(title, showBack) {
+  document.getElementById('nav-title').textContent = title;
+  document.getElementById('nav-back').classList.toggle('visible', showBack);
 }
 
-// ══════════════════════════════════════════════
-//  QUIZ LOGIC
-// ══════════════════════════════════════════════
-function startQuiz() {
-  quizQuestions = buildQuiz(selectedDiff);
-  currentIndex  = 0;
-  score         = 0;
-  document.getElementById('q-count-display').textContent = quizQuestions.length;
-  showScreen('screen-quiz');
-  renderQuestion();
-}
-
-function renderQuestion() {
-  const q    = quizQuestions[currentIndex];
-  const total = quizQuestions.length;
-  answered   = false;
-
-  // header
-  document.getElementById('progress-info').textContent  = `Question ${currentIndex + 1} of ${total}`;
-  document.getElementById('score-display').textContent  = `Score: ${score}`;
-  document.getElementById('progress-bar').style.width   = `${(currentIndex / total) * 100}%`;
-
-  // question
-  document.getElementById('question-flag').textContent     = q.flag;
-  document.getElementById('question-category').textContent = q.cat;
-  document.getElementById('question-text').textContent     = q.q;
-
-  // answers
-  const options = shuffle([q.a, ...q.wrong]);
-  const grid    = document.getElementById('answers-grid');
-  grid.innerHTML = '';
-
-  options.forEach(opt => {
-    const btn = document.createElement('button');
-    btn.className   = 'answer-btn';
-    btn.textContent = opt;
-    btn.addEventListener('click', () => handleAnswer(btn, opt, q.a));
-    grid.appendChild(btn);
-  });
-
-  // feedback
-  const fb = document.getElementById('feedback-bar');
-  fb.className = 'feedback-bar';
-  fb.textContent = '';
-}
-
-function handleAnswer(btn, chosen, correct) {
-  if (answered) return;
-  answered = true;
-
-  const allBtns = document.querySelectorAll('.answer-btn');
-  allBtns.forEach(b => b.disabled = true);
-
-  const fb = document.getElementById('feedback-bar');
-
-  if (chosen === correct) {
-    score++;
-    btn.classList.add('correct');
-    fb.className   = 'feedback-bar correct-fb show';
-    fb.textContent = '✅ Correct! Well done!';
-    playCorrect();
-  } else {
-    btn.classList.add('wrong');
-    // highlight correct answer
-    allBtns.forEach(b => { if (b.textContent === correct) b.classList.add('correct'); });
-    fb.className   = 'feedback-bar wrong-fb show';
-    fb.textContent = `❌ Not quite! The answer is ${correct}.`;
-    playWrong();
+function goBack() {
+  const prev = navHistory.pop();
+  if (!prev) return;
+  if (prev === 'home') {
+    showScreen('screen-home');
+    updateNav('Gym Exercise Guide', false);
+  } else if (prev === 'list') {
+    showScreen('screen-list');
+    updateNav(currentPart.name, true);
+    navHistory.push('home');
   }
-
-  document.getElementById('score-display').textContent = `Score: ${score}`;
-
-  setTimeout(() => {
-    currentIndex++;
-    if (currentIndex < quizQuestions.length) {
-      renderQuestion();
-    } else {
-      showResults();
-    }
-  }, 1600);
 }
 
-// ══════════════════════════════════════════════
-//  RESULTS
-// ══════════════════════════════════════════════
-function showResults() {
-  const total    = quizQuestions.length;
-  const wrong    = total - score;
-  const pct      = score / total;
-  const accuracy = Math.round(pct * 100);
-
-  // score circle
-  document.getElementById('final-score').textContent  = score;
-  document.getElementById('final-out-of').textContent = `out of ${total}`;
-
-  // stats
-  document.getElementById('stat-correct').textContent  = score;
-  document.getElementById('stat-wrong').textContent    = wrong;
-  document.getElementById('stat-accuracy').textContent = `${accuracy}%`;
-
-  // rank
-  const rank = RANKS.find(r => pct >= r.min);
-  document.getElementById('rank-title').textContent = rank.title;
-  document.getElementById('rank-desc').textContent  = rank.desc;
-
-  // icon & title
-  let icon, title, sub;
-  if (pct >= 0.9)       { icon = "🎉"; title = "Incredible!";   sub = "You're a geography champion!"; }
-  else if (pct >= 0.75) { icon = "🌟"; title = "Fantastic!";    sub = "You really know your capitals!"; }
-  else if (pct >= 0.6)  { icon = "👏"; title = "Well Done!";    sub = "Nice geography knowledge!"; }
-  else if (pct >= 0.4)  { icon = "💪"; title = "Good Try!";     sub = "Keep exploring the world!"; }
-  else                  { icon = "🌱"; title = "Keep Learning!"; sub = "Every explorer starts somewhere!"; }
-
-  document.getElementById('results-icon').textContent    = icon;
-  document.getElementById('results-title').textContent   = title;
-  document.getElementById('results-subtitle').textContent = sub;
-
-  // progress bar to 100%
-  document.getElementById('progress-bar').style.width = '100%';
-
-  showScreen('screen-results');
-  playVictory();
-}
-
-// ══════════════════════════════════════════════
-//  SOUND ENGINE  (Web Audio API – no external files)
-// ══════════════════════════════════════════════
-let audioCtx = null;
-let muted    = false;
-
-function getCtx() {
-  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  return audioCtx;
-}
-
-/* --- low-level helpers --- */
-function playTone(freq, startTime, dur, type = 'sine', gainVal = 0.4, ctx) {
-  const osc  = ctx.createOscillator();
-  const gain = ctx.createGain();
-  osc.connect(gain);
-  gain.connect(ctx.destination);
-  osc.type      = type;
-  osc.frequency.setValueAtTime(freq, startTime);
-  gain.gain.setValueAtTime(gainVal, startTime);
-  gain.gain.exponentialRampToValueAtTime(0.001, startTime + dur);
-  osc.start(startTime);
-  osc.stop(startTime + dur + 0.01);
-}
-
-function playFreqSweep(startFreq, endFreq, startTime, dur, type = 'sine', gainVal = 0.35, ctx) {
-  const osc  = ctx.createOscillator();
-  const gain = ctx.createGain();
-  osc.connect(gain);
-  gain.connect(ctx.destination);
-  osc.type = type;
-  osc.frequency.setValueAtTime(startFreq, startTime);
-  osc.frequency.exponentialRampToValueAtTime(endFreq, startTime + dur);
-  gain.gain.setValueAtTime(gainVal, startTime);
-  gain.gain.exponentialRampToValueAtTime(0.001, startTime + dur);
-  osc.start(startTime);
-  osc.stop(startTime + dur + 0.01);
-}
-
-/* --- correct sound variants --- */
-function soundCorrect1(ctx) { // ascending chime  C5→E5→G5
-  const t = ctx.currentTime;
-  [[523,0],[659,0.12],[784,0.24]].forEach(([f,d]) => playTone(f, t+d, 0.22, 'sine', 0.38, ctx));
-}
-
-function soundCorrect2(ctx) { // sparkle sweep + ping
-  const t = ctx.currentTime;
-  playFreqSweep(400, 1200, t, 0.18, 'sine', 0.3, ctx);
-  playTone(1047, t+0.2, 0.25, 'sine', 0.4, ctx);
-}
-
-function soundCorrect3(ctx) { // happy 4-note fanfare  C5→E5→G5→C6
-  const t = ctx.currentTime;
-  [[523,0],[659,0.1],[784,0.2],[1047,0.32]].forEach(([f,d]) => playTone(f, t+d, 0.18, 'triangle', 0.4, ctx));
-}
-
-function soundCorrect4(ctx) { // bouncy pop  (two quick sine bursts)
-  const t = ctx.currentTime;
-  playFreqSweep(600, 900, t, 0.08, 'sine', 0.35, ctx);
-  playFreqSweep(700, 1100, t+0.12, 0.1, 'sine', 0.35, ctx);
-  playTone(880, t+0.25, 0.2, 'sine', 0.35, ctx);
-}
-
-const correctSounds = [soundCorrect1, soundCorrect2, soundCorrect3, soundCorrect4];
-
-/* --- wrong sound variants --- */
-function soundWrong1(ctx) { // classic buzzer
-  const t = ctx.currentTime;
-  playTone(180, t, 0.4, 'sawtooth', 0.25, ctx);
-  playTone(140, t+0.1, 0.35, 'sawtooth', 0.2, ctx);
-}
-
-function soundWrong2(ctx) { // womp-womp descending trombone
-  const t = ctx.currentTime;
-  playFreqSweep(440, 300, t,      0.22, 'sawtooth', 0.22, ctx);
-  playFreqSweep(300, 180, t+0.22, 0.25, 'sawtooth', 0.22, ctx);
-}
-
-function soundWrong3(ctx) { // quick descending blip
-  const t = ctx.currentTime;
-  playFreqSweep(600, 200, t, 0.3, 'square', 0.18, ctx);
-}
-
-function soundWrong4(ctx) { // cartoon boing (sine warble)
-  const t = ctx.currentTime;
-  const osc  = ctx.createOscillator();
-  const lfo  = ctx.createOscillator();
-  const lfoG = ctx.createGain();
-  const gain = ctx.createGain();
-  lfo.connect(lfoG);
-  lfoG.connect(osc.frequency);
-  osc.connect(gain);
-  gain.connect(ctx.destination);
-  osc.type      = 'sine';
-  osc.frequency.setValueAtTime(350, t);
-  osc.frequency.exponentialRampToValueAtTime(150, t + 0.5);
-  lfo.frequency.setValueAtTime(12, t);
-  lfoG.gain.setValueAtTime(60, t);
-  gain.gain.setValueAtTime(0.3, t);
-  gain.gain.exponentialRampToValueAtTime(0.001, t + 0.5);
-  lfo.start(t); lfo.stop(t + 0.55);
-  osc.start(t); osc.stop(t + 0.55);
-}
-
-const wrongSounds = [soundWrong1, soundWrong2, soundWrong3, soundWrong4];
-
-/* --- quiz complete fanfare --- */
-function soundVictory(ctx) {
-  const t = ctx.currentTime;
-  // melody: C5 E5 G5 E5 G5 C6
-  [[523,0],[659,0.12],[784,0.24],[659,0.36],[784,0.48],[1047,0.62]].forEach(([f,d]) =>
-    playTone(f, t+d, 0.2, 'triangle', 0.38, ctx)
-  );
-}
-
-async function playCorrect() {
-  if (muted) return;
-  const ctx = getCtx();
-  if (ctx.state === 'suspended') await ctx.resume();
-  const fn = correctSounds[Math.floor(Math.random() * correctSounds.length)];
-  fn(ctx);
-}
-
-async function playWrong() {
-  if (muted) return;
-  const ctx = getCtx();
-  if (ctx.state === 'suspended') await ctx.resume();
-  const fn = wrongSounds[Math.floor(Math.random() * wrongSounds.length)];
-  fn(ctx);
-}
-
-async function playVictory() {
-  if (muted) return;
-  const ctx = getCtx();
-  if (ctx.state === 'suspended') await ctx.resume();
-  soundVictory(ctx);
-}
-
-/* ── mute button ── */
-function toggleMute() {
-  muted = !muted;
-  document.querySelectorAll('.mute-btn').forEach(b => b.textContent = muted ? '🔇' : '🔊');
-}
-
-// ══════════════════════════════════════════════
-//  EVENT LISTENERS
-// ══════════════════════════════════════════════
-document.querySelectorAll('.diff-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('selected'));
-    btn.classList.add('selected');
-    selectedDiff = btn.dataset.diff;
+function renderHome() {
+  const grid = document.getElementById('body-grid');
+  grid.innerHTML = '';
+  DATA.forEach(part => {
+    const card = document.createElement('div');
+    card.className = 'body-card';
+    card.style.setProperty('--card-color', part.color);
+    card.innerHTML = `
+      <div class="card-icon">${part.icon}</div>
+      <div class="card-name">${part.name}</div>
+      <div class="card-count">${part.exercises.length} exercises</div>
+      <div class="card-accent-line"></div>
+    `;
+    card.addEventListener('click', () => openPart(part));
+    grid.appendChild(card);
   });
-});
+}
 
-document.getElementById('btn-start').addEventListener('click', () => { getCtx(); startQuiz(); });
+function openPart(part) {
+  currentPart = part;
+  navHistory = ['home'];
 
+  document.getElementById('list-icon').innerHTML = part.icon;
+  document.getElementById('list-title').textContent = part.name;
+  document.getElementById('list-subtitle').textContent = `${part.exercises.length} exercises · ${part.desc}`;
 
-document.getElementById('btn-same-diff').addEventListener('click', () => {
-  startQuiz(); // same difficulty
-});
+  const list = document.getElementById('exercise-list');
+  list.style.setProperty('--part-color', part.color);
+  list.innerHTML = '';
 
-document.getElementById('btn-menu').addEventListener('click', () => {
-  showScreen('screen-welcome');
-});
+  part.exercises.forEach(ex => {
+    const diffClass = 'diff-' + ex.difficulty.toLowerCase();
+    const card = document.createElement('div');
+    card.className = 'exercise-card';
+    card.innerHTML = `
+      <div class="exercise-card-icon">${ex.icon}</div>
+      <div class="exercise-card-info">
+        <div class="exercise-card-name">${ex.name}</div>
+        <div class="exercise-card-machine">&#9881; ${ex.machine}</div>
+        <div class="exercise-tags">
+          <span class="tag ${diffClass}">${ex.difficulty}</span>
+          <span class="tag">${ex.sets}</span>
+          <span class="tag">${ex.reps}</span>
+        </div>
+      </div>
+      <div class="exercise-card-chevron">&#8250;</div>
+    `;
+    card.style.setProperty('--part-color', part.color);
+    card.addEventListener('click', () => openExercise(part, ex));
+    list.appendChild(card);
+  });
+
+  showScreen('screen-list');
+  updateNav(part.name, true);
+}
+
+function openExercise(part, ex) {
+  currentExercise = ex;
+  navHistory = ['home', 'list'];
+
+  const diffClass = 'diff-' + ex.difficulty.toLowerCase();
+
+  document.getElementById('detail-machine-badge').innerHTML =
+    `&#9881; ${ex.machine}`;
+  document.getElementById('detail-name').textContent = ex.name;
+
+  document.getElementById('detail-tags').innerHTML = `
+    <span class="tag ${diffClass}">${ex.difficulty}</span>
+    <span class="tag">${ex.sets}</span>
+    <span class="tag">${ex.reps}</span>
+    <span class="tag">Rest: ${ex.rest}</span>
+  `;
+
+  const primaryHTML = ex.primaryMuscles.map(m =>
+    `<span class="muscle-tag primary" style="--part-color:${part.color};border-color:${part.color};color:${part.color};background:${part.color}18">${m}</span>`
+  ).join('');
+  const secondaryHTML = ex.secondaryMuscles.map(m =>
+    `<span class="muscle-tag">${m}</span>`
+  ).join('');
+
+  const stepsHTML = ex.instructions.map((step, i) =>
+    `<div class="step">
+      <div class="step-num" style="background:${part.color}">${i + 1}</div>
+      <div class="step-text">${step}</div>
+    </div>`
+  ).join('');
+
+  const tipsHTML = ex.tips.map(tip =>
+    `<div class="tip-item"><span class="tip-icon">&#128161;</span><span>${tip}</span></div>`
+  ).join('');
+
+  document.getElementById('detail-body').innerHTML = `
+    <div class="detail-section">
+      <h3>Muscles Worked</h3>
+      <div class="muscles-list">${primaryHTML}${secondaryHTML}</div>
+    </div>
+
+    <div class="detail-section">
+      <h3>Sets & Reps</h3>
+      <div class="setup-grid">
+        <div class="setup-item">
+          <div class="si-label">Sets</div>
+          <div class="si-value">${ex.sets}</div>
+        </div>
+        <div class="setup-item">
+          <div class="si-label">Reps</div>
+          <div class="si-value">${ex.reps}</div>
+        </div>
+        <div class="setup-item">
+          <div class="si-label">Rest</div>
+          <div class="si-value">${ex.rest}</div>
+        </div>
+        <div class="setup-item">
+          <div class="si-label">Difficulty</div>
+          <div class="si-value">${ex.difficulty}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <h3>How To Perform</h3>
+      <div class="steps-list">${stepsHTML}</div>
+    </div>
+
+    <div class="detail-section">
+      <h3>Tips & Cues</h3>
+      <div class="tips-list">${tipsHTML}</div>
+    </div>
+  `;
+
+  showScreen('screen-detail');
+  updateNav(ex.name, true);
+}
+
+renderHome();
 </script>
 </body>
 </html>
