@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Countries & Capitals Trivia</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 700px;
+    }
+
+    /* ── SCREEN PANELS ── */
+    .screen {
+      display: none;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      padding: 40px 36px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+      animation: fadeIn 0.4s ease;
+    }
+
+    .screen.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── WELCOME SCREEN ── */
+    .welcome-icon {
+      font-size: 72px;
+      text-align: center;
+      margin-bottom: 16px;
+      animation: bounce 1.5s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-10px); }
+    }
+
+    h1 {
+      text-align: center;
+      color: #fff;
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.4);
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #a0c4ff;
+      font-size: 1.05rem;
+      margin-bottom: 32px;
+    }
+
+    .info-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+
+    .info-card {
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 16px 12px;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .info-card .icon { font-size: 28px; margin-bottom: 6px; }
+
+    .info-card .label {
+      color: #cbd5e1;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+    }
+
+    .info-card .value {
+      color: #fff;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    /* difficulty selector */
+    .difficulty-label {
+      color: #a0c4ff;
+      font-size: 0.9rem;
+      text-align: center;
+      margin-bottom: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .difficulty-selector {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 28px;
+    }
+
+    .diff-btn {
+      padding: 8px 22px;
+      border-radius: 50px;
+      border: 2px solid rgba(255,255,255,0.2);
+      background: transparent;
+      color: #cbd5e1;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .diff-btn:hover { border-color: #60a5fa; color: #fff; }
+
+    .diff-btn.selected {
+      background: linear-gradient(135deg, #3b82f6, #6366f1);
+      border-color: transparent;
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+    }
+
+    /* ── BUTTONS ── */
+    .btn-primary {
+      display: block;
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #f59e0b, #ef4444);
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      font-size: 1.15rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 6px 20px rgba(239, 68, 68, 0.35);
+      letter-spacing: 0.03em;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(239, 68, 68, 0.45);
+    }
+
+    .btn-primary:active { transform: translateY(0); }
+
+    /* ── QUIZ SCREEN ── */
+    .quiz-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .progress-info {
+      color: #a0c4ff;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .score-badge {
+      background: linear-gradient(135deg, #f59e0b, #ef4444);
+      color: #fff;
+      padding: 6px 16px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .progress-bar-wrap {
+      background: rgba(255,255,255,0.1);
+      border-radius: 50px;
+      height: 8px;
+      margin-bottom: 28px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+      border-radius: 50px;
+      transition: width 0.4s ease;
+    }
+
+    .question-category {
+      display: inline-block;
+      background: rgba(99, 102, 241, 0.25);
+      color: #a5b4fc;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 4px 14px;
+      border-radius: 50px;
+      margin-bottom: 12px;
+    }
+
+    .question-text {
+      color: #fff;
+      font-size: 1.3rem;
+      font-weight: 700;
+      line-height: 1.5;
+      margin-bottom: 28px;
+      min-height: 60px;
+    }
+
+    .question-flag {
+      font-size: 56px;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    .answers-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .answer-btn {
+      background: rgba(255, 255, 255, 0.07);
+      border: 2px solid rgba(255, 255, 255, 0.12);
+      border-radius: 14px;
+      padding: 16px 14px;
+      color: #e2e8f0;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s;
+      line-height: 1.3;
+    }
+
+    .answer-btn:hover:not(:disabled) {
+      background: rgba(99, 102, 241, 0.25);
+      border-color: #6366f1;
+      color: #fff;
+      transform: translateY(-2px);
+    }
+
+    .answer-btn.correct {
+      background: rgba(34, 197, 94, 0.25) !important;
+      border-color: #22c55e !important;
+      color: #86efac !important;
+      animation: pulse-green 0.4s ease;
+    }
+
+    .answer-btn.wrong {
+      background: rgba(239, 68, 68, 0.25) !important;
+      border-color: #ef4444 !important;
+      color: #fca5a5 !important;
+      animation: shake 0.4s ease;
+    }
+
+    @keyframes pulse-green {
+      0%   { transform: scale(1); }
+      50%  { transform: scale(1.04); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25%       { transform: translateX(-6px); }
+      75%       { transform: translateX(6px); }
+    }
+
+    .answer-btn:disabled { cursor: default; }
+
+    /* feedback bar */
+    .feedback-bar {
+      margin-top: 20px;
+      padding: 14px 20px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 1rem;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 0.3s;
+      min-height: 50px;
+    }
+
+    .feedback-bar.show { opacity: 1; }
+
+    .feedback-bar.correct-fb {
+      background: rgba(34, 197, 94, 0.18);
+      color: #86efac;
+      border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+
+    .feedback-bar.wrong-fb {
+      background: rgba(239, 68, 68, 0.18);
+      color: #fca5a5;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    /* ── RESULTS SCREEN ── */
+    .results-icon {
+      font-size: 80px;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    .results-title {
+      text-align: center;
+      color: #fff;
+      font-size: 1.9rem;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .results-subtitle {
+      text-align: center;
+      color: #a0c4ff;
+      margin-bottom: 28px;
+      font-size: 1rem;
+    }
+
+    .score-circle {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 28px;
+      box-shadow: 0 8px 32px rgba(99, 102, 241, 0.45);
+    }
+
+    .score-circle .big-num {
+      color: #fff;
+      font-size: 2.4rem;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .score-circle .out-of {
+      color: rgba(255,255,255,0.7);
+      font-size: 0.85rem;
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .stat-box {
+      background: rgba(255,255,255,0.07);
+      border-radius: 14px;
+      padding: 16px 10px;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .stat-box .s-icon { font-size: 24px; margin-bottom: 6px; }
+    .stat-box .s-label { color: #94a3b8; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+    .stat-box .s-value { color: #fff; font-weight: 800; font-size: 1.15rem; }
+
+    .rank-badge {
+      text-align: center;
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 24px;
+    }
+
+    .rank-badge .rank-title { color: #fcd34d; font-weight: 700; font-size: 1.1rem; margin-bottom: 4px; }
+    .rank-badge .rank-desc  { color: #94a3b8; font-size: 0.88rem; }
+
+    .btn-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .btn-secondary {
+      padding: 14px;
+      background: rgba(255,255,255,0.08);
+      border: 2px solid rgba(255,255,255,0.15);
+      border-radius: 14px;
+      color: #e2e8f0;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.14);
+      border-color: rgba(255,255,255,0.3);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 500px) {
+      .screen { padding: 28px 20px; }
+      h1 { font-size: 1.6rem; }
+      .answers-grid { grid-template-columns: 1fr; }
+      .info-cards { grid-template-columns: 1fr; }
+      .stats-row  { grid-template-columns: 1fr; }
+      .btn-row    { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<!-- fixed mute button – always visible -->
+<button class="mute-btn" onclick="toggleMute()" title="Toggle sound"
+  style="position:fixed;top:16px;right:16px;z-index:999;background:rgba(255,255,255,0.1);
+         border:1px solid rgba(255,255,255,0.2);border-radius:50%;width:42px;height:42px;
+         font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+         backdrop-filter:blur(8px);transition:background 0.2s;">🔊</button>
+
+<div class="container">
+
+  <!-- ══ WELCOME SCREEN ══ -->
+  <div id="screen-welcome" class="screen active">
+    <div class="welcome-icon">🌍</div>
+    <h1>Countries &amp; Capitals</h1>
+    <p class="subtitle">Test your world geography knowledge!</p>
+
+    <div class="info-cards">
+      <div class="info-card">
+        <div class="icon">❓</div>
+        <div class="label">Questions</div>
+        <div class="value" id="q-count-display">15</div>
+      </div>
+      <div class="info-card">
+        <div class="icon">🎯</div>
+        <div class="label">Format</div>
+        <div class="value">4 Choices</div>
+      </div>
+      <div class="info-card">
+        <div class="icon">🏆</div>
+        <div class="label">Mode</div>
+        <div class="value">Single Player</div>
+      </div>
+    </div>
+
+    <div class="difficulty-label">Choose Difficulty</div>
+    <div class="difficulty-selector">
+      <button class="diff-btn selected" data-diff="easy">Easy</button>
+      <button class="diff-btn" data-diff="medium">Medium</button>
+      <button class="diff-btn" data-diff="hard">Hard</button>
+    </div>
+
+    <button class="btn-primary" id="btn-start">🚀 Start Quiz!</button>
+  </div>
+
+  <!-- ══ QUIZ SCREEN ══ -->
+  <div id="screen-quiz" class="screen">
+    <div class="quiz-header">
+      <span class="progress-info" id="progress-info">Question 1 of 15</span>
+      <span class="score-badge" id="score-display">Score: 0</span>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar" id="progress-bar" style="width:0%"></div>
+    </div>
+
+    <div class="question-flag" id="question-flag"></div>
+    <div class="question-category" id="question-category">Capital City</div>
+    <div class="question-text" id="question-text"></div>
+
+    <div class="answers-grid" id="answers-grid"></div>
+
+    <div class="feedback-bar" id="feedback-bar"></div>
+  </div>
+
+  <!-- ══ RESULTS SCREEN ══ -->
+  <div id="screen-results" class="screen">
+    <div class="results-icon" id="results-icon">🎉</div>
+    <div class="results-title" id="results-title">Fantastic!</div>
+    <div class="results-subtitle" id="results-subtitle">You really know your capitals!</div>
+
+    <div class="score-circle">
+      <div class="big-num" id="final-score">0</div>
+      <div class="out-of" id="final-out-of">out of 15</div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-box">
+        <div class="s-icon">✅</div>
+        <div class="s-label">Correct</div>
+        <div class="s-value" id="stat-correct">0</div>
+      </div>
+      <div class="stat-box">
+        <div class="s-icon">❌</div>
+        <div class="s-label">Wrong</div>
+        <div class="s-value" id="stat-wrong">0</div>
+      </div>
+      <div class="stat-box">
+        <div class="s-icon">📊</div>
+        <div class="s-label">Accuracy</div>
+        <div class="s-value" id="stat-accuracy">0%</div>
+      </div>
+    </div>
+
+    <div class="rank-badge">
+      <div class="rank-title" id="rank-title">🌟 World Explorer</div>
+      <div class="rank-desc" id="rank-desc">Keep learning about our amazing world!</div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-secondary" id="btn-same-diff">Play Again</button>
+      <button class="btn-primary" id="btn-menu">Main Menu</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+//  QUESTION DATA
+// ══════════════════════════════════════════════
+const ALL_QUESTIONS = [
+  // Easy – well-known world capitals
+  { flag:"🇫🇷", q:"What is the capital of France?",       a:"Paris",         wrong:["London","Madrid","Berlin"],              cat:"Capital City", diff:"easy" },
+  { flag:"🇯🇵", q:"What is the capital of Japan?",        a:"Tokyo",         wrong:["Beijing","Seoul","Bangkok"],             cat:"Capital City", diff:"easy" },
+  { flag:"🇦🇺", q:"What is the capital of Australia?",    a:"Canberra",      wrong:["Sydney","Melbourne","Brisbane"],         cat:"Capital City", diff:"easy" },
+  { flag:"🇧🇷", q:"What is the capital of Brazil?",       a:"Brasília",      wrong:["Rio de Janeiro","São Paulo","Salvador"], cat:"Capital City", diff:"easy" },
+  { flag:"🇩🇪", q:"What is the capital of Germany?",      a:"Berlin",        wrong:["Munich","Hamburg","Frankfurt"],          cat:"Capital City", diff:"easy" },
+  { flag:"🇨🇦", q:"What is the capital of Canada?",       a:"Ottawa",        wrong:["Toronto","Vancouver","Montreal"],        cat:"Capital City", diff:"easy" },
+  { flag:"🇮🇹", q:"What is the capital of Italy?",        a:"Rome",          wrong:["Milan","Naples","Venice"],               cat:"Capital City", diff:"easy" },
+  { flag:"🇷🇺", q:"What is the capital of Russia?",       a:"Moscow",        wrong:["St. Petersburg","Novosibirsk","Kazan"],  cat:"Capital City", diff:"easy" },
+  { flag:"🇨🇳", q:"What is the capital of China?",        a:"Beijing",       wrong:["Shanghai","Guangzhou","Shenzhen"],       cat:"Capital City", diff:"easy" },
+  { flag:"🇺🇸", q:"What is the capital of the United States?", a:"Washington D.C.", wrong:["New York","Los Angeles","Chicago"], cat:"Capital City", diff:"easy" },
+  { flag:"🇬🇧", q:"What is the capital of the United Kingdom?", a:"London",  wrong:["Manchester","Edinburgh","Birmingham"],   cat:"Capital City", diff:"easy" },
+  { flag:"🇪🇸", q:"What is the capital of Spain?",        a:"Madrid",        wrong:["Barcelona","Seville","Valencia"],        cat:"Capital City", diff:"easy" },
+  // "Which country" questions – easy
+  { flag:"🗺️",  q:"Paris is the capital of which country?",      a:"France",      wrong:["Italy","Belgium","Switzerland"],       cat:"Which Country", diff:"easy" },
+  { flag:"🗺️",  q:"Tokyo is the capital of which country?",      a:"Japan",       wrong:["China","South Korea","Vietnam"],        cat:"Which Country", diff:"easy" },
+  { flag:"🗺️",  q:"Rome is the capital of which country?",       a:"Italy",       wrong:["Spain","Greece","Portugal"],            cat:"Which Country", diff:"easy" },
+  // Medium – less-obvious capitals
+  { flag:"🇲🇽", q:"What is the capital of Mexico?",        a:"Mexico City",   wrong:["Guadalajara","Monterrey","Puebla"],       cat:"Capital City", diff:"medium" },
+  { flag:"🇿🇦", q:"What is the capital of South Africa?",  a:"Pretoria",      wrong:["Cape Town","Johannesburg","Durban"],      cat:"Capital City", diff:"medium" },
+  { flag:"🇮🇳", q:"What is the capital of India?",         a:"New Delhi",     wrong:["Mumbai","Kolkata","Chennai"],             cat:"Capital City", diff:"medium" },
+  { flag:"🇪🇬", q:"What is the capital of Egypt?",         a:"Cairo",         wrong:["Alexandria","Luxor","Giza"],              cat:"Capital City", diff:"medium" },
+  { flag:"🇰🇪", q:"What is the capital of Kenya?",         a:"Nairobi",       wrong:["Mombasa","Kisumu","Nakuru"],              cat:"Capital City", diff:"medium" },
+  { flag:"🇦🇷", q:"What is the capital of Argentina?",     a:"Buenos Aires",  wrong:["Córdoba","Rosario","Mendoza"],            cat:"Capital City", diff:"medium" },
+  { flag:"🇹🇭", q:"What is the capital of Thailand?",      a:"Bangkok",       wrong:["Chiang Mai","Phuket","Pattaya"],          cat:"Capital City", diff:"medium" },
+  { flag:"🇵🇪", q:"What is the capital of Peru?",          a:"Lima",          wrong:["Cusco","Arequipa","Trujillo"],            cat:"Capital City", diff:"medium" },
+  { flag:"🇳🇬", q:"What is the capital of Nigeria?",       a:"Abuja",         wrong:["Lagos","Kano","Ibadan"],                  cat:"Capital City", diff:"medium" },
+  { flag:"🇵🇰", q:"What is the capital of Pakistan?",      a:"Islamabad",     wrong:["Karachi","Lahore","Peshawar"],            cat:"Capital City", diff:"medium" },
+  { flag:"🇸🇦", q:"What is the capital of Saudi Arabia?",  a:"Riyadh",        wrong:["Jeddah","Mecca","Medina"],               cat:"Capital City", diff:"medium" },
+  { flag:"🇹🇷", q:"What is the capital of Turkey?",        a:"Ankara",        wrong:["Istanbul","Izmir","Bursa"],              cat:"Capital City", diff:"medium" },
+  // "Which country" – medium
+  { flag:"🗺️",  q:"Nairobi is the capital of which country?",    a:"Kenya",        wrong:["Tanzania","Uganda","Ethiopia"],         cat:"Which Country", diff:"medium" },
+  { flag:"🗺️",  q:"Buenos Aires is the capital of which country?", a:"Argentina",  wrong:["Chile","Brazil","Uruguay"],             cat:"Which Country", diff:"medium" },
+  { flag:"🗺️",  q:"Canberra is the capital of which country?",   a:"Australia",   wrong:["New Zealand","Canada","South Africa"],  cat:"Which Country", diff:"medium" },
+  // Hard – tricky or lesser-known capitals
+  { flag:"🇨🇱", q:"What is the capital of Chile?",         a:"Santiago",      wrong:["Valparaíso","Concepción","Antofagasta"],  cat:"Capital City", diff:"hard" },
+  { flag:"🇸🇪", q:"What is the capital of Sweden?",        a:"Stockholm",     wrong:["Oslo","Copenhagen","Helsinki"],           cat:"Capital City", diff:"hard" },
+  { flag:"🇳🇴", q:"What is the capital of Norway?",        a:"Oslo",          wrong:["Bergen","Trondheim","Stavanger"],         cat:"Capital City", diff:"hard" },
+  { flag:"🇳🇿", q:"What is the capital of New Zealand?",   a:"Wellington",    wrong:["Auckland","Christchurch","Hamilton"],     cat:"Capital City", diff:"hard" },
+  { flag:"🇵🇹", q:"What is the capital of Portugal?",      a:"Lisbon",        wrong:["Porto","Faro","Braga"],                   cat:"Capital City", diff:"hard" },
+  { flag:"🇬🇷", q:"What is the capital of Greece?",        a:"Athens",        wrong:["Thessaloniki","Patras","Heraklion"],      cat:"Capital City", diff:"hard" },
+  { flag:"🇺🇦", q:"What is the capital of Ukraine?",       a:"Kyiv",          wrong:["Kharkiv","Odesa","Lviv"],                 cat:"Capital City", diff:"hard" },
+  { flag:"🇲🇦", q:"What is the capital of Morocco?",       a:"Rabat",         wrong:["Casablanca","Marrakesh","Fez"],           cat:"Capital City", diff:"hard" },
+  { flag:"🇮🇩", q:"What is the capital of Indonesia?",     a:"Jakarta",       wrong:["Bali","Surabaya","Bandung"],              cat:"Capital City", diff:"hard" },
+  { flag:"🇵🇭", q:"What is the capital of the Philippines?", a:"Manila",      wrong:["Cebu","Davao","Quezon City"],             cat:"Capital City", diff:"hard" },
+  { flag:"🇨🇴", q:"What is the capital of Colombia?",      a:"Bogotá",        wrong:["Medellín","Cali","Barranquilla"],         cat:"Capital City", diff:"hard" },
+  { flag:"🇻🇳", q:"What is the capital of Vietnam?",       a:"Hanoi",         wrong:["Ho Chi Minh City","Da Nang","Hue"],       cat:"Capital City", diff:"hard" },
+  // "Which country" – hard
+  { flag:"🗺️",  q:"Wellington is the capital of which country?", a:"New Zealand",  wrong:["Australia","Fiji","Papua New Guinea"],  cat:"Which Country", diff:"hard" },
+  { flag:"🗺️",  q:"Rabat is the capital of which country?",      a:"Morocco",      wrong:["Algeria","Tunisia","Libya"],            cat:"Which Country", diff:"hard" },
+  { flag:"🗺️",  q:"Bogotá is the capital of which country?",     a:"Colombia",     wrong:["Venezuela","Ecuador","Peru"],           cat:"Which Country", diff:"hard" },
+];
+
+// ══════════════════════════════════════════════
+//  CONFIG
+// ══════════════════════════════════════════════
+const QUESTIONS_PER_QUIZ = 15;
+
+const RANKS = [
+  { min: 0.9,  title:"🌟 World Explorer",     desc:"Outstanding! You're a geography genius!" },
+  { min: 0.75, title:"🌎 Globe Trotter",       desc:"Great job! You know the world really well!" },
+  { min: 0.6,  title:"🗺️ Map Reader",          desc:"Nice work! Keep exploring the world!" },
+  { min: 0.4,  title:"✈️ Curious Traveller",   desc:"Good effort! Practice makes perfect!" },
+  { min: 0,    title:"🌱 Young Adventurer",    desc:"Keep going — every explorer starts somewhere!" },
+];
+
+// ══════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════
+let selectedDiff   = "easy";
+let quizQuestions  = [];
+let currentIndex   = 0;
+let score          = 0;
+let answered       = false;
+
+// ══════════════════════════════════════════════
+//  HELPERS
+// ══════════════════════════════════════════════
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function buildQuiz(diff) {
+  const pool = ALL_QUESTIONS.filter(q => q.diff === diff);
+  const shuffled = shuffle(pool);
+  return shuffled.slice(0, Math.min(QUESTIONS_PER_QUIZ, shuffled.length));
+}
+
+// ══════════════════════════════════════════════
+//  QUIZ LOGIC
+// ══════════════════════════════════════════════
+function startQuiz() {
+  quizQuestions = buildQuiz(selectedDiff);
+  currentIndex  = 0;
+  score         = 0;
+  document.getElementById('q-count-display').textContent = quizQuestions.length;
+  showScreen('screen-quiz');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q    = quizQuestions[currentIndex];
+  const total = quizQuestions.length;
+  answered   = false;
+
+  // header
+  document.getElementById('progress-info').textContent  = `Question ${currentIndex + 1} of ${total}`;
+  document.getElementById('score-display').textContent  = `Score: ${score}`;
+  document.getElementById('progress-bar').style.width   = `${(currentIndex / total) * 100}%`;
+
+  // question
+  document.getElementById('question-flag').textContent     = q.flag;
+  document.getElementById('question-category').textContent = q.cat;
+  document.getElementById('question-text').textContent     = q.q;
+
+  // answers
+  const options = shuffle([q.a, ...q.wrong]);
+  const grid    = document.getElementById('answers-grid');
+  grid.innerHTML = '';
+
+  options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className   = 'answer-btn';
+    btn.textContent = opt;
+    btn.addEventListener('click', () => handleAnswer(btn, opt, q.a));
+    grid.appendChild(btn);
+  });
+
+  // feedback
+  const fb = document.getElementById('feedback-bar');
+  fb.className = 'feedback-bar';
+  fb.textContent = '';
+}
+
+function handleAnswer(btn, chosen, correct) {
+  if (answered) return;
+  answered = true;
+
+  const allBtns = document.querySelectorAll('.answer-btn');
+  allBtns.forEach(b => b.disabled = true);
+
+  const fb = document.getElementById('feedback-bar');
+
+  if (chosen === correct) {
+    score++;
+    btn.classList.add('correct');
+    fb.className   = 'feedback-bar correct-fb show';
+    fb.textContent = '✅ Correct! Well done!';
+    playCorrect();
+  } else {
+    btn.classList.add('wrong');
+    // highlight correct answer
+    allBtns.forEach(b => { if (b.textContent === correct) b.classList.add('correct'); });
+    fb.className   = 'feedback-bar wrong-fb show';
+    fb.textContent = `❌ Not quite! The answer is ${correct}.`;
+    playWrong();
+  }
+
+  document.getElementById('score-display').textContent = `Score: ${score}`;
+
+  setTimeout(() => {
+    currentIndex++;
+    if (currentIndex < quizQuestions.length) {
+      renderQuestion();
+    } else {
+      showResults();
+    }
+  }, 1600);
+}
+
+// ══════════════════════════════════════════════
+//  RESULTS
+// ══════════════════════════════════════════════
+function showResults() {
+  const total    = quizQuestions.length;
+  const wrong    = total - score;
+  const pct      = score / total;
+  const accuracy = Math.round(pct * 100);
+
+  // score circle
+  document.getElementById('final-score').textContent  = score;
+  document.getElementById('final-out-of').textContent = `out of ${total}`;
+
+  // stats
+  document.getElementById('stat-correct').textContent  = score;
+  document.getElementById('stat-wrong').textContent    = wrong;
+  document.getElementById('stat-accuracy').textContent = `${accuracy}%`;
+
+  // rank
+  const rank = RANKS.find(r => pct >= r.min);
+  document.getElementById('rank-title').textContent = rank.title;
+  document.getElementById('rank-desc').textContent  = rank.desc;
+
+  // icon & title
+  let icon, title, sub;
+  if (pct >= 0.9)       { icon = "🎉"; title = "Incredible!";   sub = "You're a geography champion!"; }
+  else if (pct >= 0.75) { icon = "🌟"; title = "Fantastic!";    sub = "You really know your capitals!"; }
+  else if (pct >= 0.6)  { icon = "👏"; title = "Well Done!";    sub = "Nice geography knowledge!"; }
+  else if (pct >= 0.4)  { icon = "💪"; title = "Good Try!";     sub = "Keep exploring the world!"; }
+  else                  { icon = "🌱"; title = "Keep Learning!"; sub = "Every explorer starts somewhere!"; }
+
+  document.getElementById('results-icon').textContent    = icon;
+  document.getElementById('results-title').textContent   = title;
+  document.getElementById('results-subtitle').textContent = sub;
+
+  // progress bar to 100%
+  document.getElementById('progress-bar').style.width = '100%';
+
+  showScreen('screen-results');
+  playVictory();
+}
+
+// ══════════════════════════════════════════════
+//  SOUND ENGINE  (Web Audio API – no external files)
+// ══════════════════════════════════════════════
+let audioCtx = null;
+let muted    = false;
+
+function getCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+
+/* --- low-level helpers --- */
+function playTone(freq, startTime, dur, type = 'sine', gainVal = 0.4, ctx) {
+  const osc  = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.type      = type;
+  osc.frequency.setValueAtTime(freq, startTime);
+  gain.gain.setValueAtTime(gainVal, startTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, startTime + dur);
+  osc.start(startTime);
+  osc.stop(startTime + dur + 0.01);
+}
+
+function playFreqSweep(startFreq, endFreq, startTime, dur, type = 'sine', gainVal = 0.35, ctx) {
+  const osc  = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.type = type;
+  osc.frequency.setValueAtTime(startFreq, startTime);
+  osc.frequency.exponentialRampToValueAtTime(endFreq, startTime + dur);
+  gain.gain.setValueAtTime(gainVal, startTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, startTime + dur);
+  osc.start(startTime);
+  osc.stop(startTime + dur + 0.01);
+}
+
+/* --- correct sound variants --- */
+function soundCorrect1(ctx) { // ascending chime  C5→E5→G5
+  const t = ctx.currentTime;
+  [[523,0],[659,0.12],[784,0.24]].forEach(([f,d]) => playTone(f, t+d, 0.22, 'sine', 0.38, ctx));
+}
+
+function soundCorrect2(ctx) { // sparkle sweep + ping
+  const t = ctx.currentTime;
+  playFreqSweep(400, 1200, t, 0.18, 'sine', 0.3, ctx);
+  playTone(1047, t+0.2, 0.25, 'sine', 0.4, ctx);
+}
+
+function soundCorrect3(ctx) { // happy 4-note fanfare  C5→E5→G5→C6
+  const t = ctx.currentTime;
+  [[523,0],[659,0.1],[784,0.2],[1047,0.32]].forEach(([f,d]) => playTone(f, t+d, 0.18, 'triangle', 0.4, ctx));
+}
+
+function soundCorrect4(ctx) { // bouncy pop  (two quick sine bursts)
+  const t = ctx.currentTime;
+  playFreqSweep(600, 900, t, 0.08, 'sine', 0.35, ctx);
+  playFreqSweep(700, 1100, t+0.12, 0.1, 'sine', 0.35, ctx);
+  playTone(880, t+0.25, 0.2, 'sine', 0.35, ctx);
+}
+
+const correctSounds = [soundCorrect1, soundCorrect2, soundCorrect3, soundCorrect4];
+
+/* --- wrong sound variants --- */
+function soundWrong1(ctx) { // classic buzzer
+  const t = ctx.currentTime;
+  playTone(180, t, 0.4, 'sawtooth', 0.25, ctx);
+  playTone(140, t+0.1, 0.35, 'sawtooth', 0.2, ctx);
+}
+
+function soundWrong2(ctx) { // womp-womp descending trombone
+  const t = ctx.currentTime;
+  playFreqSweep(440, 300, t,      0.22, 'sawtooth', 0.22, ctx);
+  playFreqSweep(300, 180, t+0.22, 0.25, 'sawtooth', 0.22, ctx);
+}
+
+function soundWrong3(ctx) { // quick descending blip
+  const t = ctx.currentTime;
+  playFreqSweep(600, 200, t, 0.3, 'square', 0.18, ctx);
+}
+
+function soundWrong4(ctx) { // cartoon boing (sine warble)
+  const t = ctx.currentTime;
+  const osc  = ctx.createOscillator();
+  const lfo  = ctx.createOscillator();
+  const lfoG = ctx.createGain();
+  const gain = ctx.createGain();
+  lfo.connect(lfoG);
+  lfoG.connect(osc.frequency);
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.type      = 'sine';
+  osc.frequency.setValueAtTime(350, t);
+  osc.frequency.exponentialRampToValueAtTime(150, t + 0.5);
+  lfo.frequency.setValueAtTime(12, t);
+  lfoG.gain.setValueAtTime(60, t);
+  gain.gain.setValueAtTime(0.3, t);
+  gain.gain.exponentialRampToValueAtTime(0.001, t + 0.5);
+  lfo.start(t); lfo.stop(t + 0.55);
+  osc.start(t); osc.stop(t + 0.55);
+}
+
+const wrongSounds = [soundWrong1, soundWrong2, soundWrong3, soundWrong4];
+
+/* --- quiz complete fanfare --- */
+function soundVictory(ctx) {
+  const t = ctx.currentTime;
+  // melody: C5 E5 G5 E5 G5 C6
+  [[523,0],[659,0.12],[784,0.24],[659,0.36],[784,0.48],[1047,0.62]].forEach(([f,d]) =>
+    playTone(f, t+d, 0.2, 'triangle', 0.38, ctx)
+  );
+}
+
+async function playCorrect() {
+  if (muted) return;
+  const ctx = getCtx();
+  if (ctx.state === 'suspended') await ctx.resume();
+  const fn = correctSounds[Math.floor(Math.random() * correctSounds.length)];
+  fn(ctx);
+}
+
+async function playWrong() {
+  if (muted) return;
+  const ctx = getCtx();
+  if (ctx.state === 'suspended') await ctx.resume();
+  const fn = wrongSounds[Math.floor(Math.random() * wrongSounds.length)];
+  fn(ctx);
+}
+
+async function playVictory() {
+  if (muted) return;
+  const ctx = getCtx();
+  if (ctx.state === 'suspended') await ctx.resume();
+  soundVictory(ctx);
+}
+
+/* ── mute button ── */
+function toggleMute() {
+  muted = !muted;
+  document.querySelectorAll('.mute-btn').forEach(b => b.textContent = muted ? '🔇' : '🔊');
+}
+
+// ══════════════════════════════════════════════
+//  EVENT LISTENERS
+// ══════════════════════════════════════════════
+document.querySelectorAll('.diff-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedDiff = btn.dataset.diff;
+  });
+});
+
+document.getElementById('btn-start').addEventListener('click', () => { getCtx(); startQuiz(); });
+
+
+document.getElementById('btn-same-diff').addEventListener('click', () => {
+  startQuiz(); // same difficulty
+});
+
+document.getElementById('btn-menu').addEventListener('click', () => {
+  showScreen('screen-welcome');
+});
+</script>
+</body>
+</html>
