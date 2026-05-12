@@ -419,6 +419,55 @@
 
     .tip-icon { flex-shrink: 0; font-size: 1rem; margin-top: 1px; }
 
+    /* ── YOUTUBE BUTTON ── */
+    .yt-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 14px 20px;
+      background: #ff0000;
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 4px 16px rgba(255,0,0,0.3);
+    }
+
+    .yt-btn:hover {
+      background: #cc0000;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(255,0,0,0.4);
+    }
+
+    .yt-btn:active { transform: translateY(0); }
+
+    .yt-icon {
+      width: 24px;
+      height: 17px;
+      background: #fff;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .yt-icon::after {
+      content: '';
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 5px 0 5px 9px;
+      border-color: transparent transparent transparent #ff0000;
+      margin-left: 2px;
+    }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 520px) {
       .hero h1 { font-size: 1.6rem; }
@@ -1428,7 +1477,15 @@ function openExercise(part, ex) {
     `<div class="tip-item"><span class="tip-icon">&#128161;</span><span>${tip}</span></div>`
   ).join('');
 
+  const ytQuery = encodeURIComponent(ex.name + ' proper form tutorial');
+  const ytUrl = 'https://www.youtube.com/results?search_query=' + ytQuery;
+
   document.getElementById('detail-body').innerHTML = `
+    <a class="yt-btn" href="${ytUrl}" target="_blank" rel="noopener noreferrer">
+      <span class="yt-icon"></span>
+      Watch Tutorial on YouTube
+    </a>
+
     <div class="detail-section">
       <h3>Muscles Worked</h3>
       <div class="muscles-list">${primaryHTML}${secondaryHTML}</div>
