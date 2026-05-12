@@ -8,346 +8,706 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #0d0d0d;
-      --surface: #1a1a1a;
-      --surface2: #242424;
-      --border: rgba(255,255,255,0.08);
-      --text: #f0f0f0;
-      --muted: #888;
-      --accent: #e63946;
-      --accent2: #f4a261;
+      --bg: #0a0a0f;
+      --surface: #13131a;
+      --surface2: #1c1c26;
+      --surface3: #23232f;
+      --border: rgba(255,255,255,0.07);
+      --border2: rgba(255,255,255,0.12);
+      --text: #f2f2f7;
+      --text2: #b0b0c8;
+      --muted: #666680;
+      --radius: 18px;
+      --radius-sm: 12px;
     }
 
     body {
-      font-family: 'Segoe UI', system-ui, sans-serif;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
+      overflow-x: hidden;
     }
 
     /* ── NAV ── */
     .nav {
       position: sticky;
       top: 0;
-      z-index: 100;
-      background: rgba(13,13,13,0.92);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-      padding: 0 20px;
+      z-index: 200;
       height: 60px;
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
+      padding: 0 20px;
+      background: rgba(10,10,15,0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
     }
 
     .nav-back {
-      background: none;
-      border: none;
-      color: var(--accent);
-      font-size: 1.4rem;
-      cursor: pointer;
-      padding: 6px;
-      border-radius: 8px;
       display: none;
-      transition: background 0.15s;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      background: var(--surface2);
+      border: 1px solid var(--border2);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.15s;
+      flex-shrink: 0;
     }
+    .nav-back.visible { display: flex; }
+    .nav-back:hover { background: var(--surface3); transform: translateX(-2px); }
 
-    .nav-back:hover { background: rgba(230,57,70,0.12); }
-    .nav-back.visible { display: block; }
-
+    .nav-title-wrap { flex: 1; overflow: hidden; }
     .nav-title {
-      font-size: 1.15rem;
+      font-size: 1rem;
       font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
       color: var(--text);
     }
-
-    .nav-logo {
-      font-size: 1.4rem;
-      margin-right: 4px;
-    }
+    .nav-logo { font-size: 1.3rem; flex-shrink: 0; }
 
     /* ── SCREENS ── */
-    .screen { display: none; }
+    .screen { display: none; animation: screenIn 0.3s ease; }
     .screen.active { display: block; }
-
-    /* ── HOME ── */
-    .hero {
-      text-align: center;
-      padding: 48px 20px 32px;
+    @keyframes screenIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
-    .hero-icon { font-size: 64px; margin-bottom: 16px; }
+    /* ══════════════════════
+       HOME
+    ══════════════════════ */
+    .home-hero {
+      position: relative;
+      padding: 56px 24px 48px;
+      text-align: center;
+      overflow: hidden;
+    }
 
-    .hero h1 {
-      font-size: 2rem;
+    .home-hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 80% at 50% -20%, rgba(230,57,70,0.18) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 40% at 80% 100%, rgba(99,102,241,0.12) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .home-hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(230,57,70,0.12);
+      border: 1px solid rgba(230,57,70,0.3);
+      color: #ff6b7a;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 50px;
+      margin-bottom: 20px;
+    }
+
+    .home-hero h1 {
+      font-size: clamp(2rem, 6vw, 2.8rem);
       font-weight: 900;
-      background: linear-gradient(135deg, #fff 40%, var(--accent2));
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #fff 30%, #b0b0d8 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+      margin-bottom: 12px;
+    }
+
+    .home-hero p {
+      color: var(--text2);
+      font-size: 1rem;
+      max-width: 360px;
+      margin: 0 auto 32px;
+      line-height: 1.6;
+    }
+
+    .home-stats {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
       margin-bottom: 8px;
     }
 
-    .hero p {
+    .home-stat {
+      text-align: center;
+    }
+
+    .home-stat .stat-num {
+      font-size: 1.5rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #e63946, #f4a261);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .home-stat .stat-lbl {
+      font-size: 0.72rem;
       color: var(--muted);
-      font-size: 1rem;
-      max-width: 400px;
-      margin: 0 auto;
-      line-height: 1.5;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-top: 2px;
+    }
+
+    .home-stat-divider {
+      width: 1px;
+      background: var(--border2);
+      align-self: stretch;
+      margin: 4px 0;
+    }
+
+    /* Body part grid */
+    .section-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 0 24px;
+      margin-bottom: 14px;
     }
 
     .body-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-      gap: 14px;
-      padding: 0 20px 40px;
-      max-width: 900px;
+      grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+      gap: 12px;
+      padding: 0 20px 60px;
+      max-width: 880px;
       margin: 0 auto;
     }
 
     .body-card {
+      position: relative;
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 24px 16px;
+      border-radius: var(--radius);
+      padding: 22px 16px 20px;
       text-align: center;
       cursor: pointer;
-      transition: transform 0.18s, border-color 0.18s, box-shadow 0.18s;
-      position: relative;
       overflow: hidden;
+      transition: transform 0.2s cubic-bezier(.34,1.56,.64,1), box-shadow 0.2s, border-color 0.2s;
     }
 
     .body-card::before {
       content: '';
       position: absolute;
       inset: 0;
-      background: var(--card-color, var(--accent));
-      opacity: 0;
-      transition: opacity 0.18s;
-      border-radius: inherit;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, var(--cc) 0%, transparent 70%);
+      opacity: 0.08;
+      transition: opacity 0.2s;
+      pointer-events: none;
     }
 
     .body-card:hover {
-      transform: translateY(-4px);
-      border-color: var(--card-color, var(--accent));
-      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      transform: translateY(-6px) scale(1.02);
+      border-color: var(--cc);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.5), 0 0 0 1px var(--cc, transparent);
     }
 
-    .body-card:hover::before { opacity: 0.08; }
+    .body-card:hover::before { opacity: 0.18; }
 
-    .body-card .card-icon {
-      font-size: 44px;
-      margin-bottom: 10px;
-      position: relative;
-    }
-
-    .body-card .card-name {
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: var(--text);
-      position: relative;
-      margin-bottom: 4px;
-    }
-
-    .body-card .card-count {
-      font-size: 0.78rem;
-      color: var(--muted);
-      position: relative;
-    }
-
-    .body-card .card-accent-line {
+    .body-card-glow {
       position: absolute;
-      bottom: 0;
+      bottom: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 40px;
+      background: var(--cc);
+      border-radius: 50%;
+      filter: blur(20px);
+      opacity: 0;
+      transition: opacity 0.2s;
+      pointer-events: none;
+    }
+
+    .body-card:hover .body-card-glow { opacity: 0.35; }
+
+    .body-card-icon {
+      font-size: 42px;
+      margin-bottom: 10px;
+      display: block;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
+    }
+
+    .body-card-name {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 4px;
+      letter-spacing: -0.01em;
+    }
+
+    .body-card-desc {
+      font-size: 0.72rem;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .body-card-count {
+      display: inline-block;
+      margin-top: 10px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--cc);
+      background: color-mix(in srgb, var(--cc) 12%, transparent);
+      border: 1px solid color-mix(in srgb, var(--cc) 30%, transparent);
+      padding: 3px 10px;
+      border-radius: 50px;
+    }
+
+    /* ══════════════════════
+       EXERCISE LIST
+    ══════════════════════ */
+    .list-hero {
+      position: relative;
+      padding: 28px 24px 24px;
+      overflow: hidden;
+    }
+
+    .list-hero-bg {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 70% 100% at 10% 50%, var(--ph-color, rgba(230,57,70,0.15)) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .list-hero-top {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .list-hero-icon-wrap {
+      width: 60px;
+      height: 60px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      background: var(--surface2);
+      border: 1px solid var(--border2);
+      flex-shrink: 0;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    }
+
+    .list-hero-title {
+      font-size: 1.7rem;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    .list-hero-sub {
+      font-size: 0.85rem;
+      color: var(--text2);
+      margin-top: 4px;
+    }
+
+    .list-filter-row {
+      position: relative;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .filter-chip {
+      padding: 6px 14px;
+      border-radius: 50px;
+      border: 1px solid var(--border2);
+      background: var(--surface2);
+      color: var(--text2);
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .filter-chip.active, .filter-chip:hover {
+      background: var(--ph-color, rgba(230,57,70,0.15));
+      border-color: var(--ph-color, rgba(230,57,70,0.4));
+      color: var(--text);
+    }
+
+    .exercise-list {
+      padding: 4px 16px 60px;
+      max-width: 880px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .ex-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: transform 0.18s cubic-bezier(.34,1.2,.64,1), border-color 0.18s, box-shadow 0.18s, background 0.18s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ex-card::after {
+      content: '';
+      position: absolute;
       left: 0;
-      right: 0;
-      height: 3px;
-      background: var(--card-color, var(--accent));
-      border-radius: 0 0 18px 18px;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: var(--ph-color, #e63946);
+      border-radius: 3px 0 0 3px;
       opacity: 0;
       transition: opacity 0.18s;
     }
 
-    .body-card:hover .card-accent-line { opacity: 1; }
-
-    /* ── EXERCISE LIST ── */
-    .list-header {
-      padding: 24px 20px 16px;
-      max-width: 900px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      gap: 16px;
+    .ex-card:hover {
+      transform: translateX(4px);
+      border-color: color-mix(in srgb, var(--ph-color) 50%, transparent);
+      background: var(--surface2);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
     }
 
-    .list-header-icon { font-size: 36px; }
+    .ex-card:hover::after { opacity: 1; }
 
-    .list-header-info h2 {
-      font-size: 1.4rem;
-      font-weight: 800;
-    }
-
-    .list-header-info p { color: var(--muted); font-size: 0.88rem; }
-
-    .exercise-list {
-      padding: 0 20px 40px;
-      max-width: 900px;
-      margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .exercise-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 18px 20px;
-      cursor: pointer;
-      transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .exercise-card:hover {
-      transform: translateY(-2px);
-      border-color: var(--part-color, var(--accent));
-      box-shadow: 0 6px 24px rgba(0,0,0,0.3);
-    }
-
-    .exercise-card-icon {
-      font-size: 32px;
-      flex-shrink: 0;
-      width: 52px;
-      height: 52px;
+    .ex-card-thumb {
+      width: 54px;
+      height: 54px;
+      border-radius: var(--radius-sm);
+      background: var(--surface2);
+      border: 1px solid var(--border2);
       display: flex;
       align-items: center;
       justify-content: center;
-      background: var(--surface2);
-      border-radius: 12px;
+      font-size: 26px;
+      flex-shrink: 0;
+      overflow: hidden;
+      position: relative;
     }
 
-    .exercise-card-info { flex: 1; }
+    .ex-card-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
 
-    .exercise-card-name {
-      font-size: 1rem;
+    .ex-card-info { flex: 1; min-width: 0; }
+
+    .ex-card-name {
+      font-size: 0.97rem;
       font-weight: 700;
-      margin-bottom: 4px;
+      margin-bottom: 3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    .exercise-card-machine {
-      font-size: 0.82rem;
+    .ex-card-machine {
+      font-size: 0.78rem;
       color: var(--muted);
-      margin-bottom: 6px;
+      margin-bottom: 7px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    .exercise-tags {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
+    .tags { display: flex; gap: 5px; flex-wrap: wrap; }
 
     .tag {
-      font-size: 0.72rem;
-      font-weight: 600;
-      padding: 3px 10px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 3px 9px;
       border-radius: 50px;
-      background: var(--surface2);
+      background: var(--surface3);
       color: var(--muted);
       border: 1px solid var(--border);
+      letter-spacing: 0.02em;
     }
 
-    .tag.diff-beginner { color: #4ade80; border-color: rgba(74,222,128,0.3); background: rgba(74,222,128,0.08); }
-    .tag.diff-intermediate { color: #facc15; border-color: rgba(250,204,21,0.3); background: rgba(250,204,21,0.08); }
-    .tag.diff-advanced { color: #f87171; border-color: rgba(248,113,113,0.3); background: rgba(248,113,113,0.08); }
+    .tag.diff-beginner     { color: #4ade80; border-color: rgba(74,222,128,0.25); background: rgba(74,222,128,0.07); }
+    .tag.diff-intermediate { color: #fbbf24; border-color: rgba(251,191,36,0.25); background: rgba(251,191,36,0.07); }
+    .tag.diff-advanced     { color: #f87171; border-color: rgba(248,113,113,0.25); background: rgba(248,113,113,0.07); }
 
-    .exercise-card-chevron {
+    .ex-card-chevron {
       color: var(--muted);
-      font-size: 1.2rem;
+      font-size: 1.3rem;
       flex-shrink: 0;
+      transition: transform 0.18s, color 0.18s;
     }
 
-    /* ── DETAIL ── */
-    .detail-header {
-      padding: 28px 20px 20px;
-      max-width: 760px;
-      margin: 0 auto;
+    .ex-card:hover .ex-card-chevron { transform: translateX(3px); color: var(--text2); }
+
+    /* ══════════════════════
+       DETAIL
+    ══════════════════════ */
+    .detail-hero {
+      position: relative;
+      padding: 28px 24px 24px;
+      overflow: hidden;
     }
 
-    .detail-machine-badge {
+    .detail-hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 100% at 100% 0%, var(--ph-color, rgba(230,57,70,0.18)) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 80% at 0% 100%, rgba(99,102,241,0.08) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .detail-eyebrow {
+      position: relative;
       display: inline-flex;
       align-items: center;
       gap: 6px;
       background: var(--surface2);
-      border: 1px solid var(--border);
+      border: 1px solid var(--border2);
       border-radius: 50px;
-      padding: 6px 14px;
-      font-size: 0.82rem;
-      color: var(--muted);
-      margin-bottom: 14px;
+      padding: 5px 12px;
+      font-size: 0.75rem;
+      color: var(--text2);
+      margin-bottom: 12px;
     }
 
     .detail-name {
-      font-size: 1.8rem;
+      position: relative;
+      font-size: clamp(1.5rem, 5vw, 2rem);
       font-weight: 900;
-      line-height: 1.2;
-      margin-bottom: 10px;
+      letter-spacing: -0.025em;
+      line-height: 1.15;
+      margin-bottom: 14px;
     }
 
-    .detail-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+    .detail-tag-row { position: relative; display: flex; gap: 7px; flex-wrap: wrap; }
 
-    .detail-body {
-      max-width: 760px;
-      margin: 0 auto;
-      padding: 0 20px 60px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
+    /* GIF section */
+    .gif-section {
+      margin: 0 16px 14px;
+      max-width: 848px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
-    .detail-section {
+    .gif-card {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 20px;
+      border-radius: var(--radius);
+      overflow: hidden;
+      position: relative;
     }
 
-    .detail-section h3 {
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--muted);
-      margin-bottom: 14px;
-      font-weight: 700;
-    }
-
-    .muscles-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .muscle-tag {
+    .gif-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16/9;
       background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 6px 12px;
-      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .gif-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Animated placeholder when no GIF */
+    .gif-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      background: linear-gradient(135deg, var(--surface2) 0%, var(--surface3) 100%);
+    }
+
+    .gif-placeholder-rings {
+      position: relative;
+      width: 72px;
+      height: 72px;
+    }
+
+    .gif-ring {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 2px solid var(--ph-color, #e63946);
+      opacity: 0.5;
+      animation: ringPulse 2s ease-out infinite;
+    }
+
+    .gif-ring:nth-child(2) { animation-delay: 0.5s; }
+    .gif-ring:nth-child(3) { animation-delay: 1s; }
+
+    @keyframes ringPulse {
+      0%   { transform: scale(0.6); opacity: 0.7; }
+      100% { transform: scale(1.4); opacity: 0; }
+    }
+
+    .gif-ring-center {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+    }
+
+    .gif-placeholder-text {
+      font-size: 0.82rem;
+      color: var(--text2);
       font-weight: 600;
+      letter-spacing: 0.03em;
     }
 
-    .muscle-tag.primary {
-      color: var(--part-color, var(--accent));
-      border-color: var(--part-color, var(--accent));
-      background: rgba(230,57,70,0.08);
+    .gif-placeholder-sub {
+      font-size: 0.72rem;
+      color: var(--muted);
     }
 
-    .steps-list {
+    .gif-label {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 8px;
+      padding: 4px 10px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    /* detail body sections */
+    .detail-body {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 0 16px 80px;
       display: flex;
       flex-direction: column;
       gap: 12px;
-      counter-reset: steps;
     }
+
+    .d-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .d-section-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .d-section-head-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      background: color-mix(in srgb, var(--ph-color) 15%, transparent);
+      border: 1px solid color-mix(in srgb, var(--ph-color) 30%, transparent);
+    }
+
+    .d-section-title {
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text2);
+    }
+
+    .d-section-body { padding: 18px; }
+
+    /* muscles */
+    .muscles-wrap { display: flex; flex-wrap: wrap; gap: 8px; }
+
+    .muscle-chip {
+      padding: 6px 13px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      background: var(--surface2);
+      border: 1px solid var(--border2);
+      color: var(--text2);
+    }
+
+    .muscle-chip.primary {
+      background: color-mix(in srgb, var(--ph-color) 12%, transparent);
+      border-color: color-mix(in srgb, var(--ph-color) 40%, transparent);
+      color: var(--ph-color);
+    }
+
+    .muscle-chip.primary::before { content: '● '; font-size: 0.6em; }
+
+    /* setup grid */
+    .setup-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .setup-box {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+    }
+
+    .setup-box-lbl {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 5px;
+      font-weight: 700;
+    }
+
+    .setup-box-val {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    /* steps */
+    .steps { display: flex; flex-direction: column; gap: 14px; }
 
     .step {
       display: flex;
@@ -357,111 +717,98 @@
 
     .step-num {
       flex-shrink: 0;
-      width: 28px;
-      height: 28px;
-      background: var(--part-color, var(--accent));
+      width: 26px;
+      height: 26px;
       border-radius: 50%;
+      background: var(--ph-color, #e63946);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.78rem;
-      font-weight: 800;
+      font-size: 0.75rem;
+      font-weight: 900;
       color: #fff;
       margin-top: 1px;
+      box-shadow: 0 2px 8px color-mix(in srgb, var(--ph-color) 40%, transparent);
     }
 
     .step-text {
-      color: #ccc;
-      font-size: 0.92rem;
+      color: var(--text2);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      padding-top: 2px;
+    }
+
+    /* tips */
+    .tips { display: flex; flex-direction: column; gap: 10px; }
+
+    .tip {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 12px 14px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      transition: border-color 0.15s;
+    }
+
+    .tip:hover { border-color: color-mix(in srgb, var(--ph-color) 30%, transparent); }
+
+    .tip-icon {
+      flex-shrink: 0;
+      font-size: 1rem;
+      margin-top: 1px;
+    }
+
+    .tip-text {
+      font-size: 0.87rem;
+      color: var(--text2);
       line-height: 1.55;
     }
 
-    .setup-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    .setup-item {
-      background: var(--surface2);
-      border-radius: 12px;
-      padding: 14px;
-    }
-
-    .setup-item .si-label {
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--muted);
-      margin-bottom: 4px;
-    }
-
-    .setup-item .si-value {
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--text);
-    }
-
-    .tips-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .tip-item {
-      display: flex;
-      gap: 10px;
-      align-items: flex-start;
-      color: #ccc;
-      font-size: 0.9rem;
-      line-height: 1.5;
-    }
-
-    .tip-icon { flex-shrink: 0; font-size: 1rem; margin-top: 1px; }
-
-    /* ── YOUTUBE BUTTON ── */
+    /* YouTube button */
     .yt-btn {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
       width: 100%;
-      padding: 14px 20px;
-      background: #ff0000;
+      padding: 15px 20px;
+      background: linear-gradient(135deg, #ff0000, #cc0000);
       color: #fff;
       border: none;
-      border-radius: 14px;
-      font-size: 1rem;
+      border-radius: var(--radius);
+      font-size: 0.97rem;
       font-weight: 700;
       cursor: pointer;
       text-decoration: none;
-      transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
-      box-shadow: 0 4px 16px rgba(255,0,0,0.3);
+      transition: filter 0.15s, transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 4px 20px rgba(255,0,0,0.28), 0 1px 0 rgba(255,255,255,0.1) inset;
+      letter-spacing: 0.01em;
     }
 
     .yt-btn:hover {
-      background: #cc0000;
+      filter: brightness(1.1);
       transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(255,0,0,0.4);
+      box-shadow: 0 8px 28px rgba(255,0,0,0.38);
     }
 
-    .yt-btn:active { transform: translateY(0); }
+    .yt-btn:active { transform: translateY(0); filter: brightness(0.95); }
 
-    .yt-icon {
-      width: 24px;
-      height: 17px;
+    .yt-icon-svg {
+      width: 26px;
+      height: 18px;
       background: #fff;
-      border-radius: 4px;
+      border-radius: 5px;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
     }
 
-    .yt-icon::after {
+    .yt-icon-svg::after {
       content: '';
-      width: 0;
-      height: 0;
+      width: 0; height: 0;
       border-style: solid;
       border-width: 5px 0 5px 9px;
       border-color: transparent transparent transparent #ff0000;
@@ -469,16 +816,24 @@
     }
 
     /* ── RESPONSIVE ── */
-    @media (max-width: 520px) {
-      .hero h1 { font-size: 1.6rem; }
-      .body-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 14px 32px; }
-      .exercise-list { padding: 0 14px 32px; }
-      .list-header { padding: 20px 14px 12px; }
-      .detail-header { padding: 20px 14px 16px; }
-      .detail-body { padding: 0 14px 40px; }
-      .setup-grid { grid-template-columns: 1fr; }
-      .detail-name { font-size: 1.4rem; }
+    @media (max-width: 540px) {
+      .body-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 12px 48px; }
+      .exercise-list { padding: 4px 12px 48px; }
+      .detail-hero { padding: 20px 16px 18px; }
+      .detail-body { padding: 0 12px 60px; }
+      .gif-section { margin: 0 12px 12px; }
+      .setup-grid { grid-template-columns: 1fr 1fr; }
+      .home-hero { padding: 40px 16px 36px; }
     }
+
+    @media (max-width: 360px) {
+      .setup-grid { grid-template-columns: 1fr; }
+    }
+
+    /* scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 3px; }
   </style>
 </head>
 <body>
@@ -486,38 +841,64 @@
 <nav class="nav">
   <button class="nav-back" id="nav-back" onclick="goBack()">&#8592;</button>
   <span class="nav-logo">&#127947;</span>
-  <span class="nav-title" id="nav-title">Gym Exercise Guide</span>
+  <div class="nav-title-wrap">
+    <div class="nav-title" id="nav-title">Gym Exercise Guide</div>
+  </div>
 </nav>
 
 <!-- ══ HOME ══ -->
 <div id="screen-home" class="screen active">
-  <div class="hero">
-    <div class="hero-icon">&#127947;&#65039;</div>
-    <h1>Gym Exercise Guide</h1>
-    <p>Pick a body part to explore exercises you can do with common gym machines.</p>
+  <div class="home-hero">
+    <div class="home-hero-bg"></div>
+    <div class="home-hero-badge">&#127947; Gym Guide</div>
+    <h1>Train Smarter,<br>Lift Better</h1>
+    <p>Step-by-step guides for 30+ exercises across 6 major muscle groups.</p>
+    <div class="home-stats">
+      <div class="home-stat">
+        <div class="stat-num">30+</div>
+        <div class="stat-lbl">Exercises</div>
+      </div>
+      <div class="home-stat-divider"></div>
+      <div class="home-stat">
+        <div class="stat-num">6</div>
+        <div class="stat-lbl">Muscle Groups</div>
+      </div>
+      <div class="home-stat-divider"></div>
+      <div class="home-stat">
+        <div class="stat-num">3</div>
+        <div class="stat-lbl">Levels</div>
+      </div>
+    </div>
   </div>
+  <p class="section-label">Choose a muscle group</p>
   <div class="body-grid" id="body-grid"></div>
 </div>
 
 <!-- ══ LIST ══ -->
 <div id="screen-list" class="screen">
-  <div class="list-header">
-    <div class="list-header-icon" id="list-icon"></div>
-    <div class="list-header-info">
-      <h2 id="list-title"></h2>
-      <p id="list-subtitle"></p>
+  <div class="list-hero" id="list-hero">
+    <div class="list-hero-bg" id="list-hero-bg"></div>
+    <div class="list-hero-top">
+      <div class="list-hero-icon-wrap" id="list-icon"></div>
+      <div>
+        <div class="list-hero-title" id="list-title"></div>
+        <div class="list-hero-sub" id="list-sub"></div>
+      </div>
     </div>
+    <div class="list-filter-row" id="list-filters"></div>
   </div>
   <div class="exercise-list" id="exercise-list"></div>
 </div>
 
 <!-- ══ DETAIL ══ -->
 <div id="screen-detail" class="screen">
-  <div class="detail-header">
-    <div class="detail-machine-badge" id="detail-machine-badge"></div>
+  <div class="detail-hero" id="detail-hero">
+    <div class="detail-hero-bg" id="detail-hero-bg"></div>
+    <div class="detail-eyebrow" id="detail-eyebrow"></div>
     <div class="detail-name" id="detail-name"></div>
-    <div class="detail-tags" id="detail-tags"></div>
+    <div class="detail-tag-row" id="detail-tags"></div>
   </div>
+  <div class="gif-section" id="gif-section"></div>
   <div class="detail-body" id="detail-body"></div>
 </div>
 
@@ -527,24 +908,23 @@ const DATA = [
     id: "chest",
     name: "Chest",
     icon: "&#128170;",
-    color: "#e63946",
     desc: "Pectorals & pushing muscles",
+    color: "#e63946",
     exercises: [
       {
         name: "Flat Barbell Bench Press",
         machine: "Flat Bench + Barbell",
         icon: "&#127947;",
         difficulty: "Intermediate",
-        sets: "3–5 sets",
-        reps: "5–12 reps",
-        rest: "90–120 sec",
+        sets: "3–5 sets", reps: "5–12 reps", rest: "90–120 sec",
+        gif: "",
         primaryMuscles: ["Pectoralis Major"],
         secondaryMuscles: ["Anterior Deltoid", "Triceps Brachii"],
         instructions: [
           "Lie flat on the bench with eyes under the bar. Grip the bar slightly wider than shoulder-width.",
           "Retract your shoulder blades and plant your feet firmly on the floor.",
           "Unrack the bar and hold it directly over your chest with arms fully extended.",
-          "Lower the bar to your mid-chest in a controlled arc, letting your elbows flare to about 75°.",
+          "Lower the bar to your mid-chest in a controlled arc, elbows at about 75°.",
           "Press the bar back up explosively until arms are fully extended.",
           "Re-rack the bar carefully after completing all reps."
         ],
@@ -560,9 +940,8 @@ const DATA = [
         machine: "Incline Bench + Dumbbells",
         icon: "&#127947;",
         difficulty: "Beginner",
-        sets: "3–4 sets",
-        reps: "8–15 reps",
-        rest: "60–90 sec",
+        sets: "3–4 sets", reps: "8–15 reps", rest: "60–90 sec",
+        gif: "",
         primaryMuscles: ["Upper Pectoralis Major"],
         secondaryMuscles: ["Anterior Deltoid", "Triceps Brachii"],
         instructions: [
@@ -583,9 +962,8 @@ const DATA = [
         machine: "Cable Machine (dual pulley)",
         icon: "&#128259;",
         difficulty: "Beginner",
-        sets: "3–4 sets",
-        reps: "12–15 reps",
-        rest: "45–60 sec",
+        sets: "3–4 sets", reps: "12–15 reps", rest: "45–60 sec",
+        gif: "",
         primaryMuscles: ["Pectoralis Major"],
         secondaryMuscles: ["Anterior Deltoid", "Biceps (stabiliser)"],
         instructions: [
@@ -606,9 +984,8 @@ const DATA = [
         machine: "Chest Press Machine",
         icon: "&#9898;",
         difficulty: "Beginner",
-        sets: "3–4 sets",
-        reps: "10–15 reps",
-        rest: "60 sec",
+        sets: "3–4 sets", reps: "10–15 reps", rest: "60 sec",
+        gif: "",
         primaryMuscles: ["Pectoralis Major"],
         secondaryMuscles: ["Triceps Brachii", "Anterior Deltoid"],
         instructions: [
@@ -629,9 +1006,8 @@ const DATA = [
         machine: "Parallel Dip Bars / Assisted Dip Machine",
         icon: "&#128296;",
         difficulty: "Intermediate",
-        sets: "3–4 sets",
-        reps: "8–12 reps",
-        rest: "60–90 sec",
+        sets: "3–4 sets", reps: "8–12 reps", rest: "60–90 sec",
+        gif: "",
         primaryMuscles: ["Lower Pectoralis Major"],
         secondaryMuscles: ["Triceps Brachii", "Anterior Deltoid"],
         instructions: [
@@ -653,17 +1029,16 @@ const DATA = [
     id: "back",
     name: "Back",
     icon: "&#127992;",
-    color: "#2a9d8f",
     desc: "Lats, traps & rhomboids",
+    color: "#2a9d8f",
     exercises: [
       {
         name: "Lat Pulldown",
         machine: "Lat Pulldown Machine",
         icon: "&#11015;",
         difficulty: "Beginner",
-        sets: "3–4 sets",
-        reps: "10–15 reps",
-        rest: "60–90 sec",
+        sets: "3–4 sets", reps: "10–15 reps", rest: "60–90 sec",
+        gif: "",
         primaryMuscles: ["Latissimus Dorsi"],
         secondaryMuscles: ["Biceps Brachii", "Rear Deltoid", "Rhomboids"],
         instructions: [
@@ -684,9 +1059,8 @@ const DATA = [
         machine: "Low Cable Row Machine",
         icon: "&#11013;",
         difficulty: "Beginner",
-        sets: "3–4 sets",
-        reps: "10–15 reps",
-        rest: "60–90 sec",
+        sets: "3–4 sets", reps: "10–15 reps", rest: "60–90 sec",
+        gif: "",
         primaryMuscles: ["Latissimus Dorsi", "Rhomboids"],
         secondaryMuscles: ["Biceps Brachii", "Rear Deltoid", "Trapezius"],
         instructions: [
@@ -707,9 +1081,8 @@ const DATA = [
         machine: "Barbell",
         icon: "&#127947;",
         difficulty: "Advanced",
-        sets: "3–5 sets",
-        reps: "5–10 reps",
-        rest: "90–120 sec",
+        sets: "3–5 sets", reps: "5–10 reps", rest: "90–120 sec",
+        gif: "",
         primaryMuscles: ["Latissimus Dorsi", "Trapezius"],
         secondaryMuscles: ["Biceps Brachii", "Rear Deltoid", "Rhomboids", "Erector Spinae"],
         instructions: [
@@ -730,9 +1103,8 @@ const DATA = [
         machine: "T-Bar Row Machine / Landmine",
         icon: "&#128296;",
         difficulty: "Intermediate",
-        sets: "3–4 sets",
-        reps: "8–12 reps",
-        rest: "90 sec",
+        sets: "3–4 sets", reps: "8–12 reps", rest: "90 sec",
+        gif: "",
         primaryMuscles: ["Latissimus Dorsi", "Rhomboids"],
         secondaryMuscles: ["Biceps Brachii", "Rear Deltoid", "Trapezius"],
         instructions: [
@@ -750,12 +1122,11 @@ const DATA = [
       },
       {
         name: "Cable Face Pull",
-        machine: "Cable Machine with Rope Attachment",
+        machine: "Cable Machine + Rope Attachment",
         icon: "&#128259;",
         difficulty: "Beginner",
-        sets: "3–4 sets",
-        reps: "15–20 reps",
-        rest: "45 sec",
+        sets: "3–4 sets", reps: "15–20 reps", rest: "45 sec",
+        gif: "",
         primaryMuscles: ["Rear Deltoid", "Trapezius"],
         secondaryMuscles: ["Rhomboids", "Rotator Cuff"],
         instructions: [
@@ -777,17 +1148,16 @@ const DATA = [
     id: "shoulders",
     name: "Shoulders",
     icon: "&#9898;",
-    color: "#f4a261",
     desc: "Deltoids & rotator cuff",
+    color: "#f4a261",
     exercises: [
       {
         name: "Overhead Press (OHP)",
         machine: "Barbell or Smith Machine",
         icon: "&#11014;",
         difficulty: "Intermediate",
-        sets: "3–5 sets",
-        reps: "5–10 reps",
-        rest: "90–120 sec",
+        sets: "3–5 sets", reps: "5–10 reps", rest: "90–120 sec",
+        gif: "",
         primaryMuscles: ["Anterior Deltoid", "Medial Deltoid"],
         secondaryMuscles: ["Triceps Brachii", "Upper Trapezius", "Serratus Anterior"],
         instructions: [
@@ -808,9 +1178,8 @@ const DATA = [
         machine: "Dumbbells",
         icon: "&#128259;",
         difficulty: "Beginner",
-        sets: "3–4 sets",
-        reps: "12–20 reps",
-        rest: "45–60 sec",
+        sets: "3–4 sets", reps: "12–20 reps", rest: "45–60 sec",
+        gif: "",
         primaryMuscles: ["Medial Deltoid"],
         secondaryMuscles: ["Anterior Deltoid", "Upper Trapezius"],
         instructions: [
@@ -831,9 +1200,8 @@ const DATA = [
         machine: "Shoulder Press Machine",
         icon: "&#9898;",
         difficulty: "Beginner",
-        sets: "3–4 sets",
-        reps: "10–15 reps",
-        rest: "60 sec",
+        sets: "3–4 sets", reps: "10–15 reps", rest: "60 sec",
+        gif: "",
         primaryMuscles: ["Anterior Deltoid", "Medial Deltoid"],
         secondaryMuscles: ["Triceps Brachii", "Upper Trapezius"],
         instructions: [
@@ -853,9 +1221,8 @@ const DATA = [
         machine: "Cable Machine (low pulley)",
         icon: "&#128259;",
         difficulty: "Beginner",
-        sets: "3–4 sets",
-        reps: "12–15 reps per side",
-        rest: "45 sec",
+        sets: "3–4 sets", reps: "12–15 reps per side", rest: "45 sec",
+        gif: "",
         primaryMuscles: ["Medial Deltoid"],
         secondaryMuscles: ["Anterior Deltoid"],
         instructions: [
@@ -876,9 +1243,8 @@ const DATA = [
         machine: "Dumbbells",
         icon: "&#128170;",
         difficulty: "Intermediate",
-        sets: "3–4 sets",
-        reps: "10–12 reps",
-        rest: "60–90 sec",
+        sets: "3–4 sets", reps: "10–12 reps", rest: "60–90 sec",
+        gif: "",
         primaryMuscles: ["Anterior Deltoid", "Medial Deltoid"],
         secondaryMuscles: ["Posterior Deltoid", "Triceps Brachii"],
         instructions: [
@@ -899,17 +1265,16 @@ const DATA = [
     id: "biceps",
     name: "Biceps",
     icon: "&#128170;",
-    color: "#e9c46a",
     desc: "Biceps & forearm flexors",
+    color: "#e9c46a",
     exercises: [
       {
         name: "Barbell Curl",
         machine: "Barbell (EZ or Straight)",
         icon: "&#127947;",
         difficulty: "Beginner",
-        sets: "3–4 sets",
-        reps: "8–12 reps",
-        rest: "60 sec",
+        sets: "3–4 sets", reps: "8–12 reps", rest: "60 sec",
+        gif: "",
         primaryMuscles: ["Biceps Brachii"],
         secondaryMuscles: ["Brachialis", "Brachioradialis"],
         instructions: [
@@ -927,12 +1292,11 @@ const DATA = [
       },
       {
         name: "Cable Curl",
-        machine: "Cable Machine (low pulley, straight or EZ bar attachment)",
+        machine: "Cable Machine (low pulley)",
         icon: "&#128259;",
         difficulty: "Beginner",
-        sets: "3–4 sets",
-        reps: "12–15 reps",
-        rest: "45–60 sec",
+        sets: "3–4 sets", reps: "12–15 reps", rest: "45–60 sec",
+        gif: "",
         primaryMuscles: ["Biceps Brachii"],
         secondaryMuscles: ["Brachialis"],
         instructions: [
@@ -949,12 +1313,11 @@ const DATA = [
       },
       {
         name: "Preacher Curl",
-        machine: "Preacher Curl Machine / EZ Bar + Preacher Bench",
+        machine: "Preacher Curl Machine / EZ Bar + Bench",
         icon: "&#128296;",
         difficulty: "Beginner",
-        sets: "3–4 sets",
-        reps: "10–15 reps",
-        rest: "60 sec",
+        sets: "3–4 sets", reps: "10–15 reps", rest: "60 sec",
+        gif: "",
         primaryMuscles: ["Biceps Brachii (long head)"],
         secondaryMuscles: ["Brachialis"],
         instructions: [
@@ -974,9 +1337,8 @@ const DATA = [
         machine: "Dumbbells",
         icon: "&#128296;",
         difficulty: "Beginner",
-        sets: "3–4 sets",
-        reps: "10–15 reps per side",
-        rest: "45–60 sec",
+        sets: "3–4 sets", reps: "10–15 reps per side", rest: "45–60 sec",
+        gif: "",
         primaryMuscles: ["Brachialis", "Brachioradialis"],
         secondaryMuscles: ["Biceps Brachii"],
         instructions: [
@@ -997,17 +1359,16 @@ const DATA = [
     id: "triceps",
     name: "Triceps",
     icon: "&#9855;",
-    color: "#e76f51",
     desc: "Triceps & elbow extensors",
+    color: "#e76f51",
     exercises: [
       {
         name: "Tricep Pushdown (Rope)",
-        machine: "Cable Machine (high pulley, rope attachment)",
+        machine: "Cable Machine (high pulley + rope)",
         icon: "&#11015;",
         difficulty: "Beginner",
-        sets: "3–4 sets",
-        reps: "12–15 reps",
-        rest: "45–60 sec",
+        sets: "3–4 sets", reps: "12–15 reps", rest: "45–60 sec",
+        gif: "",
         primaryMuscles: ["Triceps Brachii (lateral head)"],
         secondaryMuscles: ["Triceps Brachii (medial head)"],
         instructions: [
@@ -1027,9 +1388,8 @@ const DATA = [
         machine: "Cable Machine / Dumbbell",
         icon: "&#11014;",
         difficulty: "Beginner",
-        sets: "3–4 sets",
-        reps: "12–15 reps",
-        rest: "60 sec",
+        sets: "3–4 sets", reps: "12–15 reps", rest: "60 sec",
+        gif: "",
         primaryMuscles: ["Triceps Brachii (long head)"],
         secondaryMuscles: ["Triceps Brachii (medial head)"],
         instructions: [
@@ -1049,9 +1409,8 @@ const DATA = [
         machine: "Flat Bench + EZ Bar or Dumbbells",
         icon: "&#128128;",
         difficulty: "Intermediate",
-        sets: "3–4 sets",
-        reps: "10–12 reps",
-        rest: "60–90 sec",
+        sets: "3–4 sets", reps: "10–12 reps", rest: "60–90 sec",
+        gif: "",
         primaryMuscles: ["Triceps Brachii (long & medial head)"],
         secondaryMuscles: [],
         instructions: [
@@ -1060,7 +1419,7 @@ const DATA = [
           "Stop just before the bar reaches your forehead, then press back to the start."
         ],
         tips: [
-          "Lower the bar to your forehead (hence the name) — not behind your head.",
+          "Lower the bar toward your forehead (hence the name) — not behind your head.",
           "Keep upper arms completely stationary.",
           "An EZ bar reduces wrist and elbow strain compared to a straight bar."
         ]
@@ -1070,9 +1429,8 @@ const DATA = [
         machine: "Assisted Dip Machine",
         icon: "&#128296;",
         difficulty: "Beginner",
-        sets: "3–4 sets",
-        reps: "10–15 reps",
-        rest: "60 sec",
+        sets: "3–4 sets", reps: "10–15 reps", rest: "60 sec",
+        gif: "",
         primaryMuscles: ["Triceps Brachii"],
         secondaryMuscles: ["Anterior Deltoid", "Lower Pectoralis Major"],
         instructions: [
@@ -1094,17 +1452,16 @@ const DATA = [
     id: "legs",
     name: "Legs",
     icon: "&#127939;",
-    color: "#4cc9f0",
     desc: "Quads, hamstrings & glutes",
+    color: "#4cc9f0",
     exercises: [
       {
         name: "Barbell Back Squat",
         machine: "Squat Rack + Barbell",
         icon: "&#127947;",
         difficulty: "Advanced",
-        sets: "3–5 sets",
-        reps: "5–10 reps",
-        rest: "2–3 min",
+        sets: "3–5 sets", reps: "5–10 reps", rest: "2–3 min",
+        gif: "",
         primaryMuscles: ["Quadriceps", "Glutes"],
         secondaryMuscles: ["Hamstrings", "Erector Spinae", "Adductors", "Core"],
         instructions: [
@@ -1125,9 +1482,8 @@ const DATA = [
         machine: "Leg Press Machine",
         icon: "&#11014;",
         difficulty: "Beginner",
-        sets: "3–4 sets",
-        reps: "10–15 reps",
-        rest: "90 sec",
+        sets: "3–4 sets", reps: "10–15 reps", rest: "90 sec",
+        gif: "",
         primaryMuscles: ["Quadriceps", "Glutes"],
         secondaryMuscles: ["Hamstrings", "Adductors"],
         instructions: [
@@ -1147,11 +1503,10 @@ const DATA = [
         machine: "Lying Leg Curl Machine",
         icon: "&#11015;",
         difficulty: "Beginner",
-        sets: "3–4 sets",
-        reps: "10–15 reps",
-        rest: "60 sec",
+        sets: "3–4 sets", reps: "10–15 reps", rest: "60 sec",
+        gif: "",
         primaryMuscles: ["Hamstrings"],
-        secondaryMuscles: ["Gastrocnemius (calves)"],
+        secondaryMuscles: ["Gastrocnemius"],
         instructions: [
           "Adjust the machine so the pad sits just above your heels.",
           "Lie face down and grip the handles.",
@@ -1170,9 +1525,8 @@ const DATA = [
         machine: "Leg Extension Machine",
         icon: "&#11014;",
         difficulty: "Beginner",
-        sets: "3–4 sets",
-        reps: "12–15 reps",
-        rest: "60 sec",
+        sets: "3–4 sets", reps: "12–15 reps", rest: "60 sec",
+        gif: "",
         primaryMuscles: ["Quadriceps"],
         secondaryMuscles: [],
         instructions: [
@@ -1192,9 +1546,8 @@ const DATA = [
         machine: "Hip Thrust Machine / Bench + Barbell",
         icon: "&#128296;",
         difficulty: "Beginner",
-        sets: "3–4 sets",
-        reps: "12–15 reps",
-        rest: "60–90 sec",
+        sets: "3–4 sets", reps: "12–15 reps", rest: "60–90 sec",
+        gif: "",
         primaryMuscles: ["Gluteus Maximus"],
         secondaryMuscles: ["Hamstrings", "Quadriceps", "Core"],
         instructions: [
@@ -1215,9 +1568,8 @@ const DATA = [
         machine: "Standing or Seated Calf Raise Machine",
         icon: "&#11014;",
         difficulty: "Beginner",
-        sets: "4–5 sets",
-        reps: "15–20 reps",
-        rest: "45 sec",
+        sets: "4–5 sets", reps: "15–20 reps", rest: "45 sec",
+        gif: "",
         primaryMuscles: ["Gastrocnemius", "Soleus"],
         secondaryMuscles: [],
         instructions: [
@@ -1238,17 +1590,16 @@ const DATA = [
     id: "core",
     name: "Core & Abs",
     icon: "&#128170;",
-    color: "#b5838d",
     desc: "Abdominals & stabilisers",
+    color: "#b5838d",
     exercises: [
       {
         name: "Cable Crunch",
-        machine: "Cable Machine (high pulley, rope attachment)",
+        machine: "Cable Machine (high pulley + rope)",
         icon: "&#11015;",
         difficulty: "Beginner",
-        sets: "3–4 sets",
-        reps: "15–20 reps",
-        rest: "45–60 sec",
+        sets: "3–4 sets", reps: "15–20 reps", rest: "45–60 sec",
+        gif: "",
         primaryMuscles: ["Rectus Abdominis"],
         secondaryMuscles: ["Obliques"],
         instructions: [
@@ -1268,9 +1619,8 @@ const DATA = [
         machine: "Ab Wheel / Barbell",
         icon: "&#128259;",
         difficulty: "Advanced",
-        sets: "3–4 sets",
-        reps: "8–12 reps",
-        rest: "60–90 sec",
+        sets: "3–4 sets", reps: "8–12 reps", rest: "60–90 sec",
+        gif: "",
         primaryMuscles: ["Rectus Abdominis", "Transverse Abdominis"],
         secondaryMuscles: ["Obliques", "Hip Flexors", "Lats"],
         instructions: [
@@ -1290,9 +1640,8 @@ const DATA = [
         machine: "Bodyweight / Mat",
         icon: "&#128296;",
         difficulty: "Beginner",
-        sets: "3–4 sets",
-        reps: "30–60 sec hold",
-        rest: "45 sec",
+        sets: "3–4 sets", reps: "30–60 sec hold", rest: "45 sec",
+        gif: "",
         primaryMuscles: ["Transverse Abdominis", "Rectus Abdominis"],
         secondaryMuscles: ["Obliques", "Glutes", "Shoulder Stabilisers"],
         instructions: [
@@ -1313,9 +1662,8 @@ const DATA = [
         machine: "Pull-Up Bar / Captain's Chair",
         icon: "&#11015;",
         difficulty: "Intermediate",
-        sets: "3–4 sets",
-        reps: "10–15 reps",
-        rest: "60 sec",
+        sets: "3–4 sets", reps: "10–15 reps", rest: "60 sec",
+        gif: "",
         primaryMuscles: ["Rectus Abdominis (lower)", "Hip Flexors"],
         secondaryMuscles: ["Obliques", "Transverse Abdominis"],
         instructions: [
@@ -1335,9 +1683,8 @@ const DATA = [
         machine: "Cable Machine",
         icon: "&#128259;",
         difficulty: "Beginner",
-        sets: "3 sets",
-        reps: "15 reps per side",
-        rest: "45 sec",
+        sets: "3 sets", reps: "15 reps per side", rest: "45 sec",
+        gif: "",
         primaryMuscles: ["Obliques"],
         secondaryMuscles: ["Rectus Abdominis", "Transverse Abdominis"],
         instructions: [
@@ -1357,11 +1704,11 @@ const DATA = [
   }
 ];
 
-// State
+/* ─── STATE ─── */
 let currentPart = null;
-let currentExercise = null;
-let navHistory = [];
+let navHistory  = [];
 
+/* ─── UTILS ─── */
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
@@ -1386,141 +1733,229 @@ function goBack() {
   }
 }
 
+function diffClass(d) { return 'diff-' + d.toLowerCase(); }
+
+/* ─── HOME ─── */
 function renderHome() {
   const grid = document.getElementById('body-grid');
   grid.innerHTML = '';
   DATA.forEach(part => {
     const card = document.createElement('div');
     card.className = 'body-card';
-    card.style.setProperty('--card-color', part.color);
+    card.style.setProperty('--cc', part.color);
     card.innerHTML = `
-      <div class="card-icon">${part.icon}</div>
-      <div class="card-name">${part.name}</div>
-      <div class="card-count">${part.exercises.length} exercises</div>
-      <div class="card-accent-line"></div>
+      <span class="body-card-icon">${part.icon}</span>
+      <div class="body-card-name">${part.name}</div>
+      <div class="body-card-desc">${part.desc}</div>
+      <span class="body-card-count">${part.exercises.length} exercises</span>
+      <div class="body-card-glow"></div>
     `;
     card.addEventListener('click', () => openPart(part));
     grid.appendChild(card);
   });
 }
 
+/* ─── LIST ─── */
 function openPart(part) {
   currentPart = part;
-  navHistory = ['home'];
+  navHistory  = ['home'];
+
+  const heroEl = document.getElementById('list-hero');
+  heroEl.style.setProperty('--ph-color', part.color + '28');
 
   document.getElementById('list-icon').innerHTML = part.icon;
   document.getElementById('list-title').textContent = part.name;
-  document.getElementById('list-subtitle').textContent = `${part.exercises.length} exercises · ${part.desc}`;
+  document.getElementById('list-sub').textContent = `${part.exercises.length} exercises · ${part.desc}`;
 
-  const list = document.getElementById('exercise-list');
-  list.style.setProperty('--part-color', part.color);
-  list.innerHTML = '';
+  // difficulty filter chips
+  const filters = document.getElementById('list-filters');
+  const levels  = ['All', 'Beginner', 'Intermediate', 'Advanced'];
+  filters.innerHTML = '';
+  filters.style.setProperty('--ph-color', part.color + '30');
+  let activeFilter = 'All';
 
-  part.exercises.forEach(ex => {
-    const diffClass = 'diff-' + ex.difficulty.toLowerCase();
-    const card = document.createElement('div');
-    card.className = 'exercise-card';
-    card.innerHTML = `
-      <div class="exercise-card-icon">${ex.icon}</div>
-      <div class="exercise-card-info">
-        <div class="exercise-card-name">${ex.name}</div>
-        <div class="exercise-card-machine">&#9881; ${ex.machine}</div>
-        <div class="exercise-tags">
-          <span class="tag ${diffClass}">${ex.difficulty}</span>
-          <span class="tag">${ex.sets}</span>
-          <span class="tag">${ex.reps}</span>
-        </div>
-      </div>
-      <div class="exercise-card-chevron">&#8250;</div>
-    `;
-    card.style.setProperty('--part-color', part.color);
-    card.addEventListener('click', () => openExercise(part, ex));
-    list.appendChild(card);
+  levels.forEach(lvl => {
+    const chip = document.createElement('button');
+    chip.className = 'filter-chip' + (lvl === 'All' ? ' active' : '');
+    chip.textContent = lvl;
+    chip.addEventListener('click', () => {
+      filters.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      activeFilter = lvl;
+      renderList(part, activeFilter);
+    });
+    filters.appendChild(chip);
   });
 
+  const listEl = document.getElementById('exercise-list');
+  listEl.style.setProperty('--ph-color', part.color);
+
+  renderList(part, 'All');
   showScreen('screen-list');
   updateNav(part.name, true);
 }
 
+function renderList(part, filter) {
+  const listEl = document.getElementById('exercise-list');
+  listEl.innerHTML = '';
+  const exes = filter === 'All' ? part.exercises : part.exercises.filter(e => e.difficulty === filter);
+
+  if (exes.length === 0) {
+    listEl.innerHTML = `<div style="text-align:center;color:var(--muted);padding:40px 20px;font-size:0.9rem;">No exercises at this level.</div>`;
+    return;
+  }
+
+  exes.forEach(ex => {
+    const card = document.createElement('div');
+    card.className = 'ex-card';
+    card.style.setProperty('--ph-color', part.color);
+
+    const thumbInner = ex.gif
+      ? `<img src="${ex.gif}" alt="${ex.name}" loading="lazy">`
+      : ex.icon;
+
+    card.innerHTML = `
+      <div class="ex-card-thumb">${thumbInner}</div>
+      <div class="ex-card-info">
+        <div class="ex-card-name">${ex.name}</div>
+        <div class="ex-card-machine">&#9881; ${ex.machine}</div>
+        <div class="tags">
+          <span class="tag ${diffClass(ex.difficulty)}">${ex.difficulty}</span>
+          <span class="tag">${ex.sets}</span>
+          <span class="tag">${ex.reps}</span>
+        </div>
+      </div>
+      <div class="ex-card-chevron">&#8250;</div>
+    `;
+    card.addEventListener('click', () => openExercise(part, ex));
+    listEl.appendChild(card);
+  });
+}
+
+/* ─── DETAIL ─── */
 function openExercise(part, ex) {
-  currentExercise = ex;
   navHistory = ['home', 'list'];
 
-  const diffClass = 'diff-' + ex.difficulty.toLowerCase();
-
-  document.getElementById('detail-machine-badge').innerHTML =
-    `&#9881; ${ex.machine}`;
+  /* hero */
+  document.getElementById('detail-hero').style.setProperty('--ph-color', part.color + '28');
+  document.getElementById('detail-eyebrow').innerHTML = `&#9881; ${ex.machine}`;
   document.getElementById('detail-name').textContent = ex.name;
-
   document.getElementById('detail-tags').innerHTML = `
-    <span class="tag ${diffClass}">${ex.difficulty}</span>
+    <span class="tag ${diffClass(ex.difficulty)}">${ex.difficulty}</span>
     <span class="tag">${ex.sets}</span>
     <span class="tag">${ex.reps}</span>
-    <span class="tag">Rest: ${ex.rest}</span>
+    <span class="tag">&#8987; ${ex.rest}</span>
   `;
 
-  const primaryHTML = ex.primaryMuscles.map(m =>
-    `<span class="muscle-tag primary" style="--part-color:${part.color};border-color:${part.color};color:${part.color};background:${part.color}18">${m}</span>`
-  ).join('');
-  const secondaryHTML = ex.secondaryMuscles.map(m =>
-    `<span class="muscle-tag">${m}</span>`
-  ).join('');
+  /* GIF section */
+  const gifSec = document.getElementById('gif-section');
+  gifSec.innerHTML = `
+    <div class="gif-card">
+      <div class="gif-wrap" id="gif-wrap">
+        ${ex.gif
+          ? `<img src="${ex.gif}" alt="${ex.name} demonstration" loading="lazy">`
+          : `<div class="gif-placeholder">
+               <div class="gif-placeholder-rings">
+                 <div class="gif-ring"></div>
+                 <div class="gif-ring"></div>
+                 <div class="gif-ring"></div>
+                 <div class="gif-ring-center">${ex.icon}</div>
+               </div>
+               <div class="gif-placeholder-text">Exercise Animation</div>
+               <div class="gif-placeholder-sub">GIF coming soon</div>
+             </div>`
+        }
+      </div>
+      ${ex.gif ? '<span class="gif-label">GIF</span>' : ''}
+    </div>
+  `;
+  /* tint rings with part colour */
+  gifSec.querySelectorAll('.gif-ring').forEach(r => {
+    r.style.borderColor = part.color;
+  });
 
-  const stepsHTML = ex.instructions.map((step, i) =>
-    `<div class="step">
-      <div class="step-num" style="background:${part.color}">${i + 1}</div>
-      <div class="step-text">${step}</div>
-    </div>`
-  ).join('');
-
-  const tipsHTML = ex.tips.map(tip =>
-    `<div class="tip-item"><span class="tip-icon">&#128161;</span><span>${tip}</span></div>`
-  ).join('');
-
+  /* YouTube button + sections */
   const ytQuery = encodeURIComponent(ex.name + ' proper form tutorial');
-  const ytUrl = 'https://www.youtube.com/results?search_query=' + ytQuery;
+  const ytUrl   = 'https://www.youtube.com/results?search_query=' + ytQuery;
+
+  const primaryHTML   = ex.primaryMuscles.map(m =>
+    `<span class="muscle-chip primary" style="--ph-color:${part.color}">${m}</span>`).join('');
+  const secondaryHTML = ex.secondaryMuscles.map(m =>
+    `<span class="muscle-chip">${m}</span>`).join('');
+
+  const stepsHTML = ex.instructions.map((s, i) => `
+    <div class="step">
+      <div class="step-num" style="background:${part.color};box-shadow:0 2px 8px ${part.color}55">${i + 1}</div>
+      <div class="step-text">${s}</div>
+    </div>`).join('');
+
+  const tipsHTML = ex.tips.map(t => `
+    <div class="tip">
+      <span class="tip-icon">&#128161;</span>
+      <span class="tip-text">${t}</span>
+    </div>`).join('');
 
   document.getElementById('detail-body').innerHTML = `
     <a class="yt-btn" href="${ytUrl}" target="_blank" rel="noopener noreferrer">
-      <span class="yt-icon"></span>
+      <span class="yt-icon-svg"></span>
       Watch Tutorial on YouTube
     </a>
 
-    <div class="detail-section">
-      <h3>Muscles Worked</h3>
-      <div class="muscles-list">${primaryHTML}${secondaryHTML}</div>
+    <div class="d-section">
+      <div class="d-section-head">
+        <div class="d-section-head-icon" style="--ph-color:${part.color}">&#128170;</div>
+        <div class="d-section-title">Muscles Worked</div>
+      </div>
+      <div class="d-section-body">
+        <div class="muscles-wrap">${primaryHTML}${secondaryHTML}</div>
+      </div>
     </div>
 
-    <div class="detail-section">
-      <h3>Sets & Reps</h3>
-      <div class="setup-grid">
-        <div class="setup-item">
-          <div class="si-label">Sets</div>
-          <div class="si-value">${ex.sets}</div>
-        </div>
-        <div class="setup-item">
-          <div class="si-label">Reps</div>
-          <div class="si-value">${ex.reps}</div>
-        </div>
-        <div class="setup-item">
-          <div class="si-label">Rest</div>
-          <div class="si-value">${ex.rest}</div>
-        </div>
-        <div class="setup-item">
-          <div class="si-label">Difficulty</div>
-          <div class="si-value">${ex.difficulty}</div>
+    <div class="d-section">
+      <div class="d-section-head">
+        <div class="d-section-head-icon" style="--ph-color:${part.color}">&#128197;</div>
+        <div class="d-section-title">Sets &amp; Reps</div>
+      </div>
+      <div class="d-section-body">
+        <div class="setup-grid">
+          <div class="setup-box">
+            <div class="setup-box-lbl">Sets</div>
+            <div class="setup-box-val">${ex.sets}</div>
+          </div>
+          <div class="setup-box">
+            <div class="setup-box-lbl">Reps</div>
+            <div class="setup-box-val">${ex.reps}</div>
+          </div>
+          <div class="setup-box">
+            <div class="setup-box-lbl">Rest</div>
+            <div class="setup-box-val">${ex.rest}</div>
+          </div>
+          <div class="setup-box">
+            <div class="setup-box-lbl">Difficulty</div>
+            <div class="setup-box-val">${ex.difficulty}</div>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="detail-section">
-      <h3>How To Perform</h3>
-      <div class="steps-list">${stepsHTML}</div>
+    <div class="d-section">
+      <div class="d-section-head">
+        <div class="d-section-head-icon" style="--ph-color:${part.color}">&#127919;</div>
+        <div class="d-section-title">How To Perform</div>
+      </div>
+      <div class="d-section-body">
+        <div class="steps">${stepsHTML}</div>
+      </div>
     </div>
 
-    <div class="detail-section">
-      <h3>Tips & Cues</h3>
-      <div class="tips-list">${tipsHTML}</div>
+    <div class="d-section">
+      <div class="d-section-head">
+        <div class="d-section-head-icon" style="--ph-color:${part.color}">&#128161;</div>
+        <div class="d-section-title">Tips &amp; Cues</div>
+      </div>
+      <div class="d-section-body">
+        <div class="tips">${tipsHTML}</div>
+      </div>
     </div>
   `;
 
