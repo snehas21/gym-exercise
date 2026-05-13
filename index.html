@@ -2070,50 +2070,66 @@ const WGER     = 'https://wger.de/api/v2';
 const imgCache = {};
 
 /* Wikipedia article titles for each exercise (enables high-quality images) */
+/* REMOVE = no good dedicated Wikipedia article; falls back to wger API image  */
 const WIKI_TITLES = {
+  // ── Chest ──────────────────────────────────────────────────────────────────
   'Flat Dumbbell Bench Press':    'Bench_press',
-  'Incline Dumbbell Press':       'Bench_press',
-  'Decline Dumbbell Press':       'Bench_press',
-  'Dumbbell Chest Fly':           'Chest_fly',
+  // 'Incline Dumbbell Press'     → REMOVE: no dedicated WP article (section of Bench_press only)
+  // 'Decline Dumbbell Press'     → REMOVE: same situation
+  // 'Flat Barbell Bench Press'   → REMOVE: duplicate image with Flat Dumbbell Bench Press
+  // 'Machine Chest Press'        → REMOVE: no dedicated WP article
+  'Dumbbell Chest Fly':           'Fly_(exercise)',      // canonical article (Chest_fly redirects here)
   'Pec Deck Machine':             'Pec_deck',
-  'Flat Barbell Bench Press':     'Bench_press',
-  'Chest Cable Fly':              'Chest_fly',
-  'Machine Chest Press':          'Bench_press',
+  'Chest Cable Fly':              'Machine_fly',         // distinct from Dumbbell Fly
   'Dips (Chest-Focused)':         'Dip_(exercise)',
-  'Lat Pulldown':                 'Lat_pulldown',
-  'Seated Cable Row':             'Bent-over_row',
+
+  // ── Back ───────────────────────────────────────────────────────────────────
+  'Lat Pulldown':                 'Pull-down_(exercise)', // canonical slug; Lat_pulldown redirects here
+  'Seated Cable Row':             'Row_(weight-lifting)', // article thumbnail shows cable-seated-rows
   'Barbell Bent-Over Row':        'Bent-over_row',
   'T-Bar Row':                    'T-bar_row',
-  'Cable Face Pull':              'Cable_machine',
+  'Cable Face Pull':              'Face_pull_(exercise)', // dedicated article exists
+
+  // ── Shoulders ──────────────────────────────────────────────────────────────
   'Overhead Press (OHP)':         'Overhead_press',
   'Dumbbell Lateral Raise':       'Lateral_raise',
-  'Seated Machine Shoulder Press':'Overhead_press',
-  'Cable Lateral Raise':          'Lateral_raise',
+  // 'Seated Machine Shoulder Press' → REMOVE: no dedicated WP article; same image as OHP
+  // 'Cable Lateral Raise'           → REMOVE: duplicate image with Dumbbell Lateral Raise
   'Arnold Press':                 'Arnold_press',
+
+  // ── Biceps ─────────────────────────────────────────────────────────────────
   'Barbell Curl':                 'Bicep_curl',
-  'Cable Curl':                   'Bicep_curl',
+  // 'Cable Curl'                 → REMOVE: duplicate image with Barbell Curl
   'Preacher Curl':                'Preacher_curl',
   'Hammer Curl':                  'Hammer_curl',
-  'Tricep Pushdown (Rope)':       'Pushdown_(exercise)',
-  'Overhead Tricep Extension':    'Triceps_brachii_muscle',
-  'Skull Crusher':                'French_press_(exercise)',
-  'Tricep Dips (Machine)':        'Dip_(exercise)',
+
+  // ── Triceps ────────────────────────────────────────────────────────────────
+  'Tricep Pushdown (Rope)':       'Push-down_(exercise)',  // fixed slug (hyphen required)
+  // 'Overhead Tricep Extension'  → REMOVE: no dedicated WP article; Triceps_brachii_muscle shows anatomy
+  'Skull Crusher':                'Lying_triceps_extension', // skull crusher = lying triceps extension
+  // 'Tricep Dips (Machine)'      → REMOVE: no machine-dip article; duplicate of Dips (Chest-Focused)
+
+  // ── Legs ───────────────────────────────────────────────────────────────────
   'Barbell Back Squat':           'Squat_(exercise)',
   'Leg Press':                    'Leg_press',
   'Leg Curl (Lying)':             'Leg_curl',
   'Leg Extension':                'Leg_extension',
-  'Hip Thrust':                   'Hip_thrust',
-  'Calf Raise (Machine)':         'Calf_raise',
+  'Hip Thrust':                   'Pelvic_thrust',   // Hip_thrust has no dedicated WP article
+  'Calf Raise (Machine)':         'Calf_raises',     // correct slug is plural
+
+  // ── Core ───────────────────────────────────────────────────────────────────
   'Cable Crunch':                 'Crunch_(exercise)',
-  'Ab Rollout':                   'Ab_wheel_rollout',
+  // 'Ab Rollout'                 → REMOVE: no dedicated WP article (Ab_wheel_rollout does not exist)
   'Plank':                        'Plank_(exercise)',
-  'Hanging Leg Raise':            'Hanging_leg_raise',
-  'Oblique Cable Twist':          'Cable_machine',
+  'Hanging Leg Raise':            'Leg_raise',        // hanging is covered as variation in Leg_raise
+  // 'Oblique Cable Twist'        → REMOVE: no dedicated WP exercise article (Cable_machine too generic)
+
+  // ── Posterior Chain ────────────────────────────────────────────────────────
   'Deadlift':                     'Deadlift',
   'Romanian Deadlift':            'Romanian_deadlift',
   'Back Extension':               'Back_extension',
   'Good Morning':                 'Good-morning_(exercise)',
-  'Cable Pull-Through':           'Deadlift',
+  // 'Cable Pull-Through'         → REMOVE: no dedicated WP article; Deadlift was wrong
 };
 
 /* YouTube Shorts IDs for exercise tutorials */
