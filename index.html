@@ -1768,32 +1768,107 @@ function goBack() {
 
 function diffClass(d) { return 'diff-' + d.toLowerCase(); }
 
-/* ─── WGER IMAGE FETCH ─── */
-const WGER = 'https://wger.de/api/v2';
-const imgCache = {};   // exerciseName → image URL (or null)
+/* ─── IMAGE FETCH — Wikipedia first, wger fallback ─── */
+const WGER     = 'https://wger.de/api/v2';
+const imgCache = {};
 
-async function fetchWgerImage(exerciseName) {
+/* Wikipedia article titles for each exercise (enables high-quality images) */
+const WIKI_TITLES = {
+  'Flat Barbell Bench Press':     'Bench_press',
+  'Incline Dumbbell Press':       'Bench_press',
+  'Chest Cable Fly':              'Chest_fly',
+  'Machine Chest Press':          'Bench_press',
+  'Dips (Chest-Focused)':         'Dip_(exercise)',
+  'Lat Pulldown':                 'Lat_pulldown',
+  'Seated Cable Row':             'Bent-over_row',
+  'Barbell Bent-Over Row':        'Bent-over_row',
+  'T-Bar Row':                    'T-bar_row',
+  'Cable Face Pull':              'Face_pull',
+  'Overhead Press (OHP)':         'Overhead_press',
+  'Dumbbell Lateral Raise':       'Lateral_raise',
+  'Seated Machine Shoulder Press':'Overhead_press',
+  'Cable Lateral Raise':          'Lateral_raise',
+  'Arnold Press':                 'Arnold_press',
+  'Barbell Curl':                 'Bicep_curl',
+  'Cable Curl':                   'Bicep_curl',
+  'Preacher Curl':                'Preacher_curl',
+  'Hammer Curl':                  'Hammer_curl',
+  'Tricep Pushdown (Rope)':       'Pushdown_(exercise)',
+  'Overhead Tricep Extension':    'Overhead_extension',
+  'Skull Crusher':                'French_press_(exercise)',
+  'Tricep Dips (Machine)':        'Dip_(exercise)',
+  'Barbell Back Squat':           'Squat_(exercise)',
+  'Leg Press':                    'Leg_press',
+  'Leg Curl (Lying)':             'Leg_curl',
+  'Leg Extension':                'Leg_extension',
+  'Hip Thrust':                   'Hip_thrust',
+  'Calf Raise (Machine)':         'Calf_raise',
+  'Cable Crunch':                 'Crunch_(exercise)',
+  'Ab Rollout':                   'Ab_wheel_rollout',
+  'Plank':                        'Plank_(exercise)',
+  'Hanging Leg Raise':            'Hanging_leg_raise',
+  'Oblique Cable Twist':          'Woodchop_(exercise)',
+};
+
+function withTimeout(promise, ms) {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), ms))
+  ]);
+}
+
+async function fetchExerciseImage(exerciseName) {
   if (exerciseName in imgCache) return imgCache[exerciseName];
+
+  /* 1 — try Wikipedia thumbnail API */
+  const wikiTitle = WIKI_TITLES[exerciseName];
+  if (wikiTitle) {
+    try {
+      const r = await withTimeout(
+        fetch('https://en.wikipedia.org/w/api.php?action=query' +
+              '&titles=' + encodeURIComponent(wikiTitle) +
+              '&prop=pageimages&format=json&pithumbsize=600&origin=*'),
+        8000
+      );
+      if (r.ok) {
+        const data  = await r.json();
+        const page  = Object.values(data.query.pages)[0];
+        if (page && page.thumbnail) {
+          imgCache[exerciseName] = page.thumbnail.source;
+          return imgCache[exerciseName];
+        }
+      }
+    } catch (_) {}
+  }
+
+  /* 2 — fallback: wger exercise search */
   try {
-    const s = await fetch(
-      `${WGER}/exercise/search/?term=${encodeURIComponent(exerciseName)}&language=english&format=json`,
-      { signal: AbortSignal.timeout(8000) }
+    const term = exerciseName
+      .replace(/\s*\([^)]*\)/g, '')
+      .replace(/\b(Barbell|Dumbbell|Cable|Machine|Lying|Seated)\b/gi, '')
+      .trim();
+
+    const sr = await withTimeout(
+      fetch(`${WGER}/exercise/search/?term=${encodeURIComponent(term)}&language=english&format=json`),
+      8000
     );
-    if (!s.ok) { imgCache[exerciseName] = null; return null; }
-    const { suggestions } = await s.json();
-    if (!suggestions?.length) { imgCache[exerciseName] = null; return null; }
+    if (!sr.ok) { imgCache[exerciseName] = null; return null; }
+    const { suggestions } = await sr.json();
+    if (!suggestions || !suggestions.length) { imgCache[exerciseName] = null; return null; }
 
     const baseId = suggestions[0].data.base_id;
-    const i = await fetch(
-      `${WGER}/exerciseimage/?exercise_base_id=${baseId}&format=json`,
-      { signal: AbortSignal.timeout(8000) }
+    const ir = await withTimeout(
+      fetch(`${WGER}/exerciseimage/?exercise_base_id=${baseId}&format=json`),
+      8000
     );
-    if (!i.ok) { imgCache[exerciseName] = null; return null; }
-    const { results } = await i.json();
-    const url = results?.find(r => r.is_main)?.image || results?.[0]?.image || null;
+    if (!ir.ok) { imgCache[exerciseName] = null; return null; }
+    const { results } = await ir.json();
+    const url = results && results.length
+      ? (results.find(r => r.is_main) || results[0]).image
+      : null;
     imgCache[exerciseName] = url;
     return url;
-  } catch {
+  } catch (_) {
     imgCache[exerciseName] = null;
     return null;
   }
@@ -1942,7 +2017,7 @@ function openExercise(part, ex) {
 
   /* fetch from wger if we don't already have an image */
   if (!showImg) {
-    fetchWgerImage(ex.name).then(url => {
+    fetchExerciseImage(ex.name).then(url => {
       const img   = document.getElementById('gif-img');
       const ph    = document.getElementById('gif-ph');
       const label = document.getElementById('gif-label');
