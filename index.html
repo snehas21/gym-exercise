@@ -1810,6 +1810,135 @@ const DATA = [
         ]
       }
     ]
+  },
+  {
+    id: "lower-back",
+    name: "Lower Back",
+    icon: "&#129460;",
+    desc: "Erector spinae & lumbar stabilisers",
+    color: "#c77dff",
+    exercises: [
+      {
+        name: "Deadlift",
+        machine: "Barbell",
+        icon: "&#127947;",
+        difficulty: "Advanced",
+        sets: "3–5 sets", reps: "3–8 reps", rest: "2–3 min",
+        gif: "",
+        primaryMuscles: ["Erector Spinae", "Glutes", "Hamstrings"],
+        secondaryMuscles: ["Trapezius", "Lats", "Quadriceps", "Core"],
+        instructions: [
+          "Stand with feet hip-width apart, bar over mid-foot. Grip just outside your legs.",
+          "Hinge at the hips and bend your knees until your shins touch the bar.",
+          "Take a deep breath, brace your core hard, and squeeze your lats as if protecting your armpits.",
+          "Drive your feet into the floor and push your hips forward as the bar rises.",
+          "Keep the bar in contact with your body the entire way up.",
+          "Lock out by squeezing your glutes at the top — hips and knees fully extended.",
+          "Lower the bar by hinging at the hips first, then bending the knees once the bar passes them."
+        ],
+        tips: [
+          "Never round your lower back — a neutral spine is non-negotiable.",
+          "Think 'push the floor away' rather than 'pull the bar up'.",
+          "Wear flat-soled shoes or lift barefoot for better force transfer.",
+          "Film yourself from the side to check your bar path stays vertical."
+        ]
+      },
+      {
+        name: "Romanian Deadlift",
+        machine: "Barbell or Dumbbells",
+        icon: "&#127947;",
+        difficulty: "Intermediate",
+        sets: "3–4 sets", reps: "8–12 reps", rest: "90 sec",
+        gif: "",
+        primaryMuscles: ["Erector Spinae", "Hamstrings"],
+        secondaryMuscles: ["Glutes", "Adductors", "Core"],
+        instructions: [
+          "Hold a barbell or dumbbells in front of your thighs with an overhand grip.",
+          "Stand tall with feet hip-width apart and a slight bend in your knees.",
+          "Hinge at the hips, pushing them back as you lower the bar along your legs.",
+          "Lower until you feel a deep hamstring stretch — typically just below the knee.",
+          "Drive your hips forward and squeeze your glutes to return to standing.",
+          "Keep the bar close to your body throughout the entire movement."
+        ],
+        tips: [
+          "This is a hip-hinge, not a squat — the knees stay almost straight.",
+          "Let the stretch in your hamstrings guide how far you go, not the weight.",
+          "Keep your chest tall and avoid rounding the upper back.",
+          "Slower eccentrics (3–4 sec lowering) increase hamstring time under tension."
+        ]
+      },
+      {
+        name: "Back Extension",
+        machine: "45° Hyperextension Bench",
+        icon: "&#9195;",
+        difficulty: "Beginner",
+        sets: "3–4 sets", reps: "12–15 reps", rest: "60 sec",
+        gif: "",
+        primaryMuscles: ["Erector Spinae"],
+        secondaryMuscles: ["Glutes", "Hamstrings"],
+        instructions: [
+          "Adjust the hyperextension bench so the pad sits at your upper thighs.",
+          "Hook your feet under the ankle pads and cross your arms over your chest.",
+          "Hinge at the hips, lowering your torso toward the floor with a neutral spine.",
+          "Contract your lower back and glutes to raise your torso back to parallel.",
+          "Hold briefly at the top, then lower under control."
+        ],
+        tips: [
+          "Do not hyperextend past parallel — this stresses the lumbar spine.",
+          "Add a plate to your chest for more resistance as you get stronger.",
+          "Focus on squeezing the glutes at the top of each rep.",
+          "A slow tempo (3 sec down, 1 sec up) maximises lower-back activation."
+        ]
+      },
+      {
+        name: "Good Morning",
+        machine: "Barbell",
+        icon: "&#9728;",
+        difficulty: "Intermediate",
+        sets: "3–4 sets", reps: "8–12 reps", rest: "90 sec",
+        gif: "",
+        primaryMuscles: ["Erector Spinae"],
+        secondaryMuscles: ["Hamstrings", "Glutes", "Core"],
+        instructions: [
+          "Place a barbell on your upper traps as you would for a squat.",
+          "Stand with feet shoulder-width apart, toes pointing slightly out.",
+          "Unlock your knees slightly — keep them soft but not deeply bent.",
+          "Hinge at the hips, pushing them back while keeping your back flat.",
+          "Lower your torso until it approaches parallel with the floor.",
+          "Reverse the movement by driving your hips forward back to upright."
+        ],
+        tips: [
+          "Use a very light weight until you are comfortable with the hip-hinge pattern.",
+          "Think of this as a barbell Romanian deadlift with the bar on your back.",
+          "Never round your lower back — quality of movement matters far more than load.",
+          "This exercise also strengthens the hamstrings significantly."
+        ]
+      },
+      {
+        name: "Cable Pull-Through",
+        machine: "Cable Machine (low pulley + rope)",
+        icon: "&#128259;",
+        difficulty: "Beginner",
+        sets: "3–4 sets", reps: "12–15 reps", rest: "60 sec",
+        gif: "",
+        primaryMuscles: ["Erector Spinae", "Glutes"],
+        secondaryMuscles: ["Hamstrings", "Core"],
+        instructions: [
+          "Attach a rope handle to the low pulley. Stand facing away from the machine.",
+          "Straddle the cable and hold the rope between your legs.",
+          "Step forward until there is tension in the cable, feet shoulder-width apart.",
+          "Hinge at the hips, pushing them back and letting the rope travel between your legs.",
+          "Drive your hips forward explosively until you are fully upright.",
+          "Squeeze your glutes hard at the top, then hinge back for the next rep."
+        ],
+        tips: [
+          "A great teaching tool for the hip-hinge pattern — ideal for deadlift beginners.",
+          "The power comes from the hips, not the arms — keep your grip relaxed.",
+          "Stand far enough from the machine to maintain cable tension throughout.",
+          "Keep your chest up and back flat at all times."
+        ]
+      }
+    ]
   }
 ];
 
@@ -1884,6 +2013,11 @@ const WIKI_TITLES = {
   'Plank':                        'Plank_(exercise)',
   'Hanging Leg Raise':            'Hanging_leg_raise',
   'Oblique Cable Twist':          'Cable_machine',
+  'Deadlift':                     'Deadlift',
+  'Romanian Deadlift':            'Romanian_deadlift',
+  'Back Extension':               'Back_extension',
+  'Good Morning':                 'Good-morning_(exercise)',
+  'Cable Pull-Through':           'Hip_hinge',
 };
 
 /* YouTube Shorts IDs for exercise tutorials */
@@ -1922,6 +2056,11 @@ const YT_IDS = {
   'Plank':                         'v25dawSzRTM',
   'Hanging Leg Raise':             'FMYJ1lgtSoY',
   'Oblique Cable Twist':           'yglSetVOFeA',
+  'Deadlift':                      'ZaTM37cfiDs',
+  'Romanian Deadlift':             'ecuZtKTNI9U',
+  'Back Extension':                '2EtM3XL56xA',
+  'Good Morning':                  'yfE4IFhfEmY',
+  'Cable Pull-Through':            'd3sH6fbCBP0',
 };
 
 function withTimeout(promise, ms) {
