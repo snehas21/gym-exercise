@@ -593,6 +593,39 @@
       color: var(--muted);
     }
 
+    /* loading dots shown while fetching */
+    .gif-loading-dots {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .gif-loading-dots span {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--muted);
+      animation: dotBounce 1.2s ease-in-out infinite;
+    }
+
+    .gif-loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .gif-loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes dotBounce {
+      0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+      40%           { transform: translateY(-8px); opacity: 1; }
+    }
+
+    /* image inside gif-wrap once loaded */
+    .gif-wrap img.loaded {
+      animation: imgFadeIn 0.4s ease;
+    }
+
+    @keyframes imgFadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
     .gif-label {
       position: absolute;
       top: 10px;
@@ -1735,6 +1768,37 @@ function goBack() {
 
 function diffClass(d) { return 'diff-' + d.toLowerCase(); }
 
+/* ─── WGER IMAGE FETCH ─── */
+const WGER = 'https://wger.de/api/v2';
+const imgCache = {};   // exerciseName → image URL (or null)
+
+async function fetchWgerImage(exerciseName) {
+  if (exerciseName in imgCache) return imgCache[exerciseName];
+  try {
+    const s = await fetch(
+      `${WGER}/exercise/search/?term=${encodeURIComponent(exerciseName)}&language=english&format=json`,
+      { signal: AbortSignal.timeout(8000) }
+    );
+    if (!s.ok) { imgCache[exerciseName] = null; return null; }
+    const { suggestions } = await s.json();
+    if (!suggestions?.length) { imgCache[exerciseName] = null; return null; }
+
+    const baseId = suggestions[0].data.base_id;
+    const i = await fetch(
+      `${WGER}/exerciseimage/?exercise_base_id=${baseId}&format=json`,
+      { signal: AbortSignal.timeout(8000) }
+    );
+    if (!i.ok) { imgCache[exerciseName] = null; return null; }
+    const { results } = await i.json();
+    const url = results?.find(r => r.is_main)?.image || results?.[0]?.image || null;
+    imgCache[exerciseName] = url;
+    return url;
+  } catch {
+    imgCache[exerciseName] = null;
+    return null;
+  }
+}
+
 /* ─── HOME ─── */
 function renderHome() {
   const grid = document.getElementById('body-grid');
@@ -1847,35 +1911,67 @@ function openExercise(part, ex) {
     <span class="tag">&#8987; ${ex.rest}</span>
   `;
 
-  /* GIF section */
+  /* GIF section — placeholder shown immediately, real image loaded async */
   const gifSec = document.getElementById('gif-section');
+  const cachedImg = imgCache[ex.name];
+  const showImg   = ex.gif || (cachedImg && cachedImg !== null);
+
   gifSec.innerHTML = `
     <div class="gif-card">
       <div class="gif-wrap" id="gif-wrap">
-        ${ex.gif
-          ? `<img src="${ex.gif}" alt="${ex.name} demonstration" loading="lazy">`
-          : `<div class="gif-placeholder">
-               <div class="gif-placeholder-rings">
-                 <div class="gif-ring"></div>
-                 <div class="gif-ring"></div>
-                 <div class="gif-ring"></div>
-                 <div class="gif-ring-center">${ex.icon}</div>
-               </div>
-               <div class="gif-placeholder-text">Exercise Animation</div>
-               <div class="gif-placeholder-sub">GIF coming soon</div>
-             </div>`
-        }
+        <img id="gif-img" alt="${ex.name} demonstration"
+             style="display:${showImg ? 'block' : 'none'};width:100%;height:100%;object-fit:cover;"
+             ${showImg ? `src="${ex.gif || cachedImg}"` : ''}>
+        <div class="gif-placeholder" id="gif-ph"
+             style="display:${showImg ? 'none' : 'flex'}">
+          <div class="gif-placeholder-rings">
+            <div class="gif-ring"></div>
+            <div class="gif-ring"></div>
+            <div class="gif-ring"></div>
+            <div class="gif-ring-center">${ex.icon}</div>
+          </div>
+          <div class="gif-placeholder-text" id="gif-ph-text">Loading image…</div>
+          <div class="gif-loading-dots"><span></span><span></span><span></span></div>
+        </div>
       </div>
-      ${ex.gif ? '<span class="gif-label">GIF</span>' : ''}
+      <span class="gif-label" id="gif-label" style="display:${showImg ? 'inline' : 'none'}">IMAGE</span>
     </div>
   `;
-  /* tint rings with part colour */
-  gifSec.querySelectorAll('.gif-ring').forEach(r => {
-    r.style.borderColor = part.color;
-  });
 
-  /* YouTube button + sections */
-  const ytQuery = encodeURIComponent(ex.name + ' proper form tutorial');
+  gifSec.querySelectorAll('.gif-ring').forEach(r => { r.style.borderColor = part.color; });
+
+  /* fetch from wger if we don't already have an image */
+  if (!showImg) {
+    fetchWgerImage(ex.name).then(url => {
+      const img   = document.getElementById('gif-img');
+      const ph    = document.getElementById('gif-ph');
+      const label = document.getElementById('gif-label');
+      if (!img) return;   // user navigated away
+      if (url) {
+        img.src = url;
+        img.onload = () => {
+          img.classList.add('loaded');
+          img.style.display = 'block';
+          if (ph)    ph.style.display    = 'none';
+          if (label) label.style.display = 'inline';
+        };
+        img.onerror = () => {
+          const t = document.getElementById('gif-ph-text');
+          if (t) t.textContent = 'No image available';
+          const dots = ph?.querySelector('.gif-loading-dots');
+          if (dots) dots.style.display = 'none';
+        };
+      } else {
+        const t = document.getElementById('gif-ph-text');
+        if (t) t.textContent = 'No image available';
+        const dots = ph?.querySelector('.gif-loading-dots');
+        if (dots) dots.style.display = 'none';
+      }
+    });
+  }
+
+  /* YouTube search link */
+  const ytQuery = encodeURIComponent(ex.name + ' exercise tutorial proper form');
   const ytUrl   = 'https://www.youtube.com/results?search_query=' + ytQuery;
 
   const primaryHTML   = ex.primaryMuscles.map(m =>
@@ -1898,7 +1994,7 @@ function openExercise(part, ex) {
   document.getElementById('detail-body').innerHTML = `
     <a class="yt-btn" href="${ytUrl}" target="_blank" rel="noopener noreferrer">
       <span class="yt-icon-svg"></span>
-      Watch Tutorial on YouTube
+      Search &ldquo;${ex.name}&rdquo; on YouTube
     </a>
 
     <div class="d-section">
