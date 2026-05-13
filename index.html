@@ -849,18 +849,94 @@
     }
 
     /* ── RESPONSIVE ── */
-    @media (max-width: 540px) {
-      .body-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 12px 48px; }
-      .exercise-list { padding: 4px 12px 48px; }
-      .detail-hero { padding: 20px 16px 18px; }
-      .detail-body { padding: 0 12px 60px; }
-      .gif-section { margin: 0 12px 12px; }
-      .setup-grid { grid-template-columns: 1fr 1fr; }
-      .home-hero { padding: 40px 16px 36px; }
+
+    /* 600px — typical phone in portrait */
+    @media (max-width: 600px) {
+      /* nav */
+      .nav { padding: 0 14px; height: 56px; }
+      .nav-back { width: 40px; height: 40px; font-size: 1rem; }
+      .nav-title { font-size: 0.95rem; }
+
+      /* home hero */
+      .home-hero { padding: 36px 16px 28px; }
+      .home-hero-badge { font-size: 0.68rem; padding: 4px 12px; }
+      .home-hero p { font-size: 0.9rem; margin-bottom: 24px; }
+      .home-stats { gap: 16px; }
+      .home-stat .stat-num { font-size: 1.3rem; }
+      .home-stat .stat-lbl { font-size: 0.68rem; }
+      .section-label { padding: 0 16px; font-size: 0.68rem; }
+
+      /* body-part grid — 2 columns */
+      .body-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        padding: 0 12px 48px;
+      }
+      .body-card { padding: 18px 12px 16px; border-radius: 14px; }
+      .body-card-icon { font-size: 36px; margin-bottom: 8px; }
+      .body-card-name { font-size: 0.88rem; }
+      .body-card-desc { font-size: 0.68rem; }
+      .body-card-count { font-size: 0.66rem; margin-top: 8px; }
+
+      /* exercise list */
+      .list-hero { padding: 18px 16px 16px; }
+      .list-hero-icon-wrap { width: 50px; height: 50px; font-size: 26px; border-radius: 13px; flex-shrink: 0; }
+      .list-hero-title { font-size: 1.35rem; }
+      .list-hero-sub { font-size: 0.8rem; }
+      .list-filter-row { gap: 6px; }
+      .filter-chip { padding: 8px 13px; font-size: 0.75rem; min-height: 36px; }
+      .exercise-list { padding: 4px 12px 48px; gap: 8px; }
+      .ex-card { padding: 12px 14px; gap: 11px; border-radius: 14px; }
+      .ex-card-thumb { width: 46px; height: 46px; border-radius: 10px; font-size: 22px; }
+      .ex-card-name { font-size: 0.9rem; }
+      .ex-card-machine { font-size: 0.74rem; }
+      .tag { font-size: 0.65rem; padding: 3px 8px; }
+
+      /* detail */
+      .detail-hero { padding: 16px 16px 14px; }
+      .detail-eyebrow { font-size: 0.72rem; padding: 4px 10px; margin-bottom: 10px; }
+      .detail-name { font-size: 1.35rem; margin-bottom: 10px; }
+      .detail-tag-row { gap: 5px; }
+      .gif-section { margin: 0 12px 10px; }
+      .detail-body { padding: 0 12px 60px; gap: 10px; }
+      .d-section { border-radius: 14px; }
+      .d-section-head { padding: 11px 14px; }
+      .d-section-body { padding: 14px; }
+      .d-section-title { font-size: 0.7rem; }
+      .muscle-chip { font-size: 0.78rem; padding: 5px 10px; border-radius: 7px; }
+      .setup-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+      .setup-box { padding: 12px; border-radius: 10px; }
+      .setup-box-lbl { font-size: 0.65rem; }
+      .setup-box-val { font-size: 0.9rem; }
+      .step { gap: 10px; }
+      .step-num { width: 24px; height: 24px; font-size: 0.7rem; flex-shrink: 0; }
+      .step-text { font-size: 0.86rem; line-height: 1.55; }
+      .tip { padding: 10px 12px; border-radius: 10px; gap: 10px; }
+      .tip-text { font-size: 0.84rem; }
+      .yt-btn { padding: 14px 16px; font-size: 0.9rem; border-radius: 14px; gap: 8px; }
     }
 
-    @media (max-width: 360px) {
+    /* 380px — small phones (SE, older Androids) */
+    @media (max-width: 380px) {
+      .home-hero h1 { font-size: 1.6rem; }
+      .home-stats { gap: 10px; }
+      .home-stat .stat-num { font-size: 1.1rem; }
+      .body-card-icon { font-size: 30px; }
       .setup-grid { grid-template-columns: 1fr; }
+      .detail-name { font-size: 1.2rem; }
+    }
+
+    /* iOS safe-area support */
+    @supports (padding-bottom: env(safe-area-inset-bottom)) {
+      .nav {
+        padding-left: max(14px, env(safe-area-inset-left));
+        padding-right: max(14px, env(safe-area-inset-right));
+      }
+      .body-grid,
+      .exercise-list,
+      .detail-body {
+        padding-bottom: max(48px, env(safe-area-inset-bottom));
+      }
     }
 
     /* scrollbar */
@@ -1810,6 +1886,26 @@ const WIKI_TITLES = {
   'Oblique Cable Twist':          'Woodchop_(exercise)',
 };
 
+/* Specific YouTube tutorial video IDs (sourced 2026-05) */
+const YT_IDS = {
+  'Flat Barbell Bench Press':  'vcBig73ojpE',   // Jeff Nippard — bench press technique
+  'Incline Dumbbell Press':    'gl8H4QLXKTo',   // Incline dumbbell press tutorial
+  'Lat Pulldown':              'lSt1oTrZ_Cc',   // Lat pulldown & seated row guide
+  'Seated Cable Row':          'lSt1oTrZ_Cc',   // same video covers both
+  'Barbell Bent-Over Row':     'T3N-TO4reLQ',   // Athlean-X barbell rows
+  'Cable Face Pull':           'eIq5CB9JfKE',   // Athlean-X face pulls
+  'Overhead Press (OHP)':      'GlyABLsPk-Q',   // Barbell overhead press step-by-step
+  'Dumbbell Lateral Raise':    'b_LEX4n9lOs',   // Lateral raise how-to tutorial
+  'Cable Lateral Raise':       'b_LEX4n9lOs',   // same lateral raise video
+  'Cable Curl':                '2MUEL4nL6hA',   // Cable bicep curl tutorial
+  'Tricep Pushdown (Rope)':    '7R88yqmcGrw',   // Athlean-X tricep pushdown
+  'Skull Crusher':             '9baX4-wEYx8',   // Buff Dudes skull crusher tutorial
+  'Barbell Back Squat':        'bEv6CCg2BC8',   // Jeff Nippard — squat technique
+  'Hip Thrust':                'qFxTNOiQIAU',   // Bret Contreras hip thrust demo
+  'Cable Crunch':              'ToJeyhydUxU',   // Cable crunch — do it right
+  'Hanging Leg Raise':         'Pr1ieGZ5atk',   // Hanging leg raise how-to
+};
+
 function withTimeout(promise, ms) {
   return Promise.race([
     promise,
@@ -2045,9 +2141,12 @@ function openExercise(part, ex) {
     });
   }
 
-  /* YouTube search link */
-  const ytQuery = encodeURIComponent(ex.name + ' exercise tutorial proper form');
-  const ytUrl   = 'https://www.youtube.com/results?search_query=' + ytQuery;
+  /* YouTube link — direct video if ID known, search otherwise */
+  const ytId    = YT_IDS[ex.name] || null;
+  const ytUrl   = ytId
+    ? 'https://www.youtube.com/watch?v=' + ytId
+    : 'https://www.youtube.com/results?search_query=' + encodeURIComponent(ex.name + ' exercise tutorial proper form');
+  const ytLabel = ytId ? 'Watch Tutorial on YouTube' : 'Search &ldquo;' + ex.name + '&rdquo; on YouTube';
 
   const primaryHTML   = ex.primaryMuscles.map(m =>
     `<span class="muscle-chip primary" style="--ph-color:${part.color}">${m}</span>`).join('');
@@ -2069,7 +2168,7 @@ function openExercise(part, ex) {
   document.getElementById('detail-body').innerHTML = `
     <a class="yt-btn" href="${ytUrl}" target="_blank" rel="noopener noreferrer">
       <span class="yt-icon-svg"></span>
-      Search &ldquo;${ex.name}&rdquo; on YouTube
+      ${ytLabel}
     </a>
 
     <div class="d-section">
