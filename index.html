@@ -1870,8 +1870,8 @@ const WIKI_TITLES = {
   'Preacher Curl':                'Preacher_curl',
   'Hammer Curl':                  'Hammer_curl',
   'Tricep Pushdown (Rope)':       'Pushdown_(exercise)',
-  'Overhead Tricep Extension':    'Overhead_extension',
-  'Skull Crusher':                'French_press_(exercise)',
+  'Overhead Tricep Extension':    'Triceps_extensions',
+  'Skull Crusher':                'Skull_crusher',
   'Tricep Dips (Machine)':        'Dip_(exercise)',
   'Barbell Back Squat':           'Squat_(exercise)',
   'Leg Press':                    'Leg_press',
@@ -1883,27 +1883,45 @@ const WIKI_TITLES = {
   'Ab Rollout':                   'Ab_wheel_rollout',
   'Plank':                        'Plank_(exercise)',
   'Hanging Leg Raise':            'Hanging_leg_raise',
-  'Oblique Cable Twist':          'Woodchop_(exercise)',
+  'Oblique Cable Twist':          'Cable_machine',
 };
 
-/* Specific YouTube tutorial video IDs (sourced 2026-05) */
+/* YouTube Shorts IDs for exercise tutorials */
 const YT_IDS = {
-  'Flat Barbell Bench Press':  'vcBig73ojpE',   // Jeff Nippard — bench press technique
-  'Incline Dumbbell Press':    'gl8H4QLXKTo',   // Incline dumbbell press tutorial
-  'Lat Pulldown':              'lSt1oTrZ_Cc',   // Lat pulldown & seated row guide
-  'Seated Cable Row':          'lSt1oTrZ_Cc',   // same video covers both
-  'Barbell Bent-Over Row':     'T3N-TO4reLQ',   // Athlean-X barbell rows
-  'Cable Face Pull':           'eIq5CB9JfKE',   // Athlean-X face pulls
-  'Overhead Press (OHP)':      'GlyABLsPk-Q',   // Barbell overhead press step-by-step
-  'Dumbbell Lateral Raise':    'b_LEX4n9lOs',   // Lateral raise how-to tutorial
-  'Cable Lateral Raise':       'b_LEX4n9lOs',   // same lateral raise video
-  'Cable Curl':                '2MUEL4nL6hA',   // Cable bicep curl tutorial
-  'Tricep Pushdown (Rope)':    '7R88yqmcGrw',   // Athlean-X tricep pushdown
-  'Skull Crusher':             '9baX4-wEYx8',   // Buff Dudes skull crusher tutorial
-  'Barbell Back Squat':        'bEv6CCg2BC8',   // Jeff Nippard — squat technique
-  'Hip Thrust':                'qFxTNOiQIAU',   // Bret Contreras hip thrust demo
-  'Cable Crunch':              'ToJeyhydUxU',   // Cable crunch — do it right
-  'Hanging Leg Raise':         'Pr1ieGZ5atk',   // Hanging leg raise how-to
+  'Flat Barbell Bench Press':      'hWbUlkb5Ms4',
+  'Incline Dumbbell Press':        '8fXfwG4ftaQ',
+  'Chest Cable Fly':               'I-Ue34qLxc4',
+  'Machine Chest Press':           'Qu7-ceCvq7w',
+  'Dips (Chest-Focused)':          'oHozI0cIzuw',
+  'Lat Pulldown':                  '3q1Zsi3vkjo',
+  'Seated Cable Row':              'jqYQOQqLNgQ',
+  'Barbell Bent-Over Row':         'Nqh7q3zDCoQ',
+  'T-Bar Row':                     'efu0Bgm-QaQ',
+  'Cable Face Pull':               'm_dfOvtwPpg',
+  'Overhead Press (OHP)':          'afR3tPH6y_g',
+  'Dumbbell Lateral Raise':        'f_OGBg2KxgY',
+  'Seated Machine Shoulder Press': 'zyLpD7m0llo',
+  'Cable Lateral Raise':           'f_OGBg2KxgY',
+  'Arnold Press':                  '6K_N9AGhItQ',
+  'Barbell Curl':                  '54x2WF1_Suc',
+  'Cable Curl':                    'vr68yVuG2ns',
+  'Preacher Curl':                 'iKgfqFkdeWY',
+  'Hammer Curl':                   'NyW2fT2gQhM',
+  'Tricep Pushdown (Rope)':        'UKsqwz1OSWw',
+  'Overhead Tricep Extension':     'b_r_LW4HEcM',
+  'Skull Crusher':                 'ZY7HEE_A-ns',
+  'Tricep Dips (Machine)':         '9llvBAV4RHI',
+  'Barbell Back Squat':            'iZTxa8NJH2g',
+  'Leg Press':                     'nDh_BlnLCGc',
+  'Leg Curl (Lying)':              'bgfHeL6eR9Q',
+  'Leg Extension':                 'd3d2yz7V26c',
+  'Hip Thrust':                    'W86oVlnLqY4',
+  'Calf Raise (Machine)':          'B30JglFGx8Y',
+  'Cable Crunch':                  'dkGwcfo9zto',
+  'Ab Rollout':                    'C_j2Ux1Se5c',
+  'Plank':                         'v25dawSzRTM',
+  'Hanging Leg Raise':             'FMYJ1lgtSoY',
+  'Oblique Cable Twist':           'yglSetVOFeA',
 };
 
 function withTimeout(promise, ms) {
@@ -2144,9 +2162,9 @@ function openExercise(part, ex) {
   /* YouTube link — direct video if ID known, search otherwise */
   const ytId    = YT_IDS[ex.name] || null;
   const ytUrl   = ytId
-    ? 'https://www.youtube.com/watch?v=' + ytId
+    ? 'https://www.youtube.com/shorts/' + ytId
     : 'https://www.youtube.com/results?search_query=' + encodeURIComponent(ex.name + ' exercise tutorial proper form');
-  const ytLabel = ytId ? 'Watch Tutorial on YouTube' : 'Search &ldquo;' + ex.name + '&rdquo; on YouTube';
+  const ytLabel = ytId ? 'Watch on YouTube Shorts' : 'Search &ldquo;' + ex.name + '&rdquo; on YouTube';
 
   const primaryHTML   = ex.primaryMuscles.map(m =>
     `<span class="muscle-chip primary" style="--ph-color:${part.color}">${m}</span>`).join('');
