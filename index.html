@@ -2084,7 +2084,7 @@ const WIKI_TITLES = {
   'Seated Cable Row':             'Bent-over_row',
   'Barbell Bent-Over Row':        'Bent-over_row',
   'T-Bar Row':                    'T-bar_row',
-  'Cable Face Pull':              'Face_pull',
+  'Cable Face Pull':              'Cable_machine',
   'Overhead Press (OHP)':         'Overhead_press',
   'Dumbbell Lateral Raise':       'Lateral_raise',
   'Seated Machine Shoulder Press':'Overhead_press',
@@ -2095,8 +2095,8 @@ const WIKI_TITLES = {
   'Preacher Curl':                'Preacher_curl',
   'Hammer Curl':                  'Hammer_curl',
   'Tricep Pushdown (Rope)':       'Pushdown_(exercise)',
-  'Overhead Tricep Extension':    'Triceps_extensions',
-  'Skull Crusher':                'Skull_crusher',
+  'Overhead Tricep Extension':    'Triceps_brachii_muscle',
+  'Skull Crusher':                'French_press_(exercise)',
   'Tricep Dips (Machine)':        'Dip_(exercise)',
   'Barbell Back Squat':           'Squat_(exercise)',
   'Leg Press':                    'Leg_press',
@@ -2113,7 +2113,7 @@ const WIKI_TITLES = {
   'Romanian Deadlift':            'Romanian_deadlift',
   'Back Extension':               'Back_extension',
   'Good Morning':                 'Good-morning_(exercise)',
-  'Cable Pull-Through':           'Hip_hinge',
+  'Cable Pull-Through':           'Deadlift',
 };
 
 /* YouTube Shorts IDs for exercise tutorials */
@@ -2173,28 +2173,26 @@ function withTimeout(promise, ms) {
 async function fetchExerciseImage(exerciseName) {
   if (exerciseName in imgCache) return imgCache[exerciseName];
 
-  /* 1 — try Wikipedia thumbnail API */
+  /* 1 — Wikipedia REST summary API (used by Wikipedia mobile apps) */
   const wikiTitle = WIKI_TITLES[exerciseName];
   if (wikiTitle) {
     try {
       const r = await withTimeout(
-        fetch('https://en.wikipedia.org/w/api.php?action=query' +
-              '&titles=' + encodeURIComponent(wikiTitle) +
-              '&prop=pageimages&format=json&pithumbsize=600&origin=*'),
+        fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(wikiTitle)}`),
         8000
       );
       if (r.ok) {
-        const data  = await r.json();
-        const page  = Object.values(data.query.pages)[0];
-        if (page && page.thumbnail) {
-          imgCache[exerciseName] = page.thumbnail.source;
-          return imgCache[exerciseName];
+        const data = await r.json();
+        const src  = data.originalimage?.source || data.thumbnail?.source;
+        if (src) {
+          imgCache[exerciseName] = src;
+          return src;
         }
       }
     } catch (_) {}
   }
 
-  /* 2 — fallback: wger exercise search */
+  /* 2 — wger exercise search + image */
   try {
     const term = exerciseName
       .replace(/\s*\([^)]*\)/g, '')
@@ -2205,26 +2203,30 @@ async function fetchExerciseImage(exerciseName) {
       fetch(`${WGER}/exercise/search/?term=${encodeURIComponent(term)}&language=english&format=json`),
       8000
     );
-    if (!sr.ok) { imgCache[exerciseName] = null; return null; }
-    const { suggestions } = await sr.json();
-    if (!suggestions || !suggestions.length) { imgCache[exerciseName] = null; return null; }
+    if (sr.ok) {
+      const { suggestions } = await sr.json();
+      if (suggestions && suggestions.length) {
+        const baseId = suggestions[0].data.base_id;
+        const ir = await withTimeout(
+          fetch(`${WGER}/exerciseimage/?exercise_base_id=${baseId}&format=json`),
+          8000
+        );
+        if (ir.ok) {
+          const { results } = await ir.json();
+          const url = results && results.length
+            ? (results.find(r => r.is_main) || results[0]).image
+            : null;
+          if (url) {
+            imgCache[exerciseName] = url;
+            return url;
+          }
+        }
+      }
+    }
+  } catch (_) {}
 
-    const baseId = suggestions[0].data.base_id;
-    const ir = await withTimeout(
-      fetch(`${WGER}/exerciseimage/?exercise_base_id=${baseId}&format=json`),
-      8000
-    );
-    if (!ir.ok) { imgCache[exerciseName] = null; return null; }
-    const { results } = await ir.json();
-    const url = results && results.length
-      ? (results.find(r => r.is_main) || results[0]).image
-      : null;
-    imgCache[exerciseName] = url;
-    return url;
-  } catch (_) {
-    imgCache[exerciseName] = null;
-    return null;
-  }
+  imgCache[exerciseName] = null;
+  return null;
 }
 
 /* ─── HOME ─── */
