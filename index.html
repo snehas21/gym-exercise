@@ -3007,14 +3007,6 @@ const WIKI_TITLES = {
   'Reverse Hyperextension':       'Back_extension',
   'Band Good Morning':            'Good-morning_(exercise)',
   'Band Deadlift':                'Deadlift',
-  // Plantar Fasciitis Rehab
-  'Plantar Fascia Stretch':       'Plantar_fasciitis',
-  'Gastrocnemius Calf Stretch':   'Gastrocnemius_muscle',
-  'Soleus Calf Stretch':          'Soleus_muscle',
-  'Eccentric Heel Drop':          'Plantar_fasciitis',
-  'Towel Scrunches':              'Plantar_fasciitis',
-  'Arch Doming (Short Foot)':     'Plantar_fasciitis',
-  'Foot Rolling (Massage)':       'Plantar_fasciitis',
 };
 
 /* YouTube Shorts IDs for exercise tutorials */
@@ -3187,6 +3179,14 @@ async function fetchExerciseImage(exerciseName) {
       }
     }
   } catch (_) {}
+
+  /* 3 — YouTube thumbnail (always shows the exact exercise being demonstrated) */
+  const ytId = YT_IDS[exerciseName];
+  if (ytId) {
+    const thumb = `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
+    imgCache[exerciseName] = thumb;
+    return thumb;
+  }
 
   imgCache[exerciseName] = null;
   return null;
