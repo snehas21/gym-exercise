@@ -2100,6 +2100,102 @@ const DATA = [
           "A slow tempo (2 sec up, 3 sec down) maximises erector spinae activation.",
           "Ideal for beginners or anyone returning from lower back injury — build up weight gradually."
         ]
+      },
+      {
+        name: "Sumo Deadlift",
+        machine: "Barbell",
+        icon: "&#127947;",
+        difficulty: "Intermediate",
+        sets: "3–5 sets", reps: "3–8 reps", rest: "2–3 min",
+        gif: "",
+        primaryMuscles: ["Erector Spinae", "Glutes", "Adductors"],
+        secondaryMuscles: ["Hamstrings", "Quadriceps", "Trapezius", "Core"],
+        instructions: [
+          "Set up with feet significantly wider than shoulder-width, toes pointed out 30–45°.",
+          "Grip the bar inside your legs with either a double overhand or mixed grip.",
+          "Hinge down until your shins are near vertical and your hips are lower than in a conventional deadlift.",
+          "Brace your core, take a deep breath, and drive your feet outward into the floor.",
+          "Push the floor away as you extend your hips and knees simultaneously.",
+          "Lock out at the top with hips forward and shoulder blades retracted.",
+          "Lower the bar under control by hinging your hips back first."
+        ],
+        tips: [
+          "The wider stance reduces lower-back stress compared to conventional deadlift — good for those with lumbar sensitivity.",
+          "Think 'push the floor apart' with your feet to activate the adductors.",
+          "Keep the bar close to your body — it should nearly graze your inner thighs.",
+          "Hip mobility is key: if you can't reach the bar with a flat back, work on hip flexibility first."
+        ]
+      },
+      {
+        name: "Trap Bar Deadlift",
+        machine: "Trap Bar (Hex Bar)",
+        icon: "&#127947;",
+        difficulty: "Beginner",
+        sets: "3–4 sets", reps: "5–10 reps", rest: "2–3 min",
+        gif: "",
+        primaryMuscles: ["Erector Spinae", "Glutes", "Quadriceps"],
+        secondaryMuscles: ["Hamstrings", "Trapezius", "Core", "Lats"],
+        instructions: [
+          "Step inside the hex bar and stand in the centre, feet hip-width apart.",
+          "Hinge at the hips and grip the handles at your sides — the neutral grip reduces wrist and shoulder strain.",
+          "Flatten your back, brace your core, and take a deep breath.",
+          "Drive through your heels, extending hips and knees together to stand up tall.",
+          "Squeeze your glutes at lockout, then lower the bar with control by hinging the hips back.",
+          "Reset your position fully before each rep."
+        ],
+        tips: [
+          "The most beginner-friendly deadlift variation — the weight sits at your sides rather than in front, reducing lower-back shear.",
+          "Use the high handles if available to further reduce the range of motion during learning.",
+          "Great for people with limited hip mobility or those coming back from lower back issues.",
+          "Because the load is more centred, you can often lift more than with a conventional deadlift."
+        ]
+      },
+      {
+        name: "Dumbbell Romanian Deadlift",
+        machine: "Dumbbells",
+        icon: "&#127947;",
+        difficulty: "Beginner",
+        sets: "3–4 sets", reps: "10–15 reps", rest: "60–90 sec",
+        gif: "",
+        primaryMuscles: ["Erector Spinae", "Hamstrings"],
+        secondaryMuscles: ["Glutes", "Adductors", "Core"],
+        instructions: [
+          "Hold a dumbbell in each hand in front of your thighs, palms facing your body.",
+          "Stand with feet hip-width apart and a slight bend in your knees.",
+          "Hinge at the hips, pushing them back while keeping your back flat and chest tall.",
+          "Lower the dumbbells along the front of your legs until you feel a deep hamstring stretch.",
+          "Drive your hips forward and squeeze your glutes to return to standing.",
+          "Keep the dumbbells close to your body throughout — they should nearly brush your shins."
+        ],
+        tips: [
+          "The dumbbell version allows each side to move independently, which helps identify and correct imbalances.",
+          "More beginner-friendly than the barbell version — easier to maintain a neutral spine.",
+          "Let the stretch in your hamstrings determine your range — do not force depth if your back rounds.",
+          "Try a slow 3-second lowering phase for maximum posterior chain activation."
+        ]
+      },
+      {
+        name: "Reverse Hyperextension",
+        machine: "Reverse Hyper Machine / Flat Bench",
+        icon: "&#9195;",
+        difficulty: "Beginner",
+        sets: "3–4 sets", reps: "12–15 reps", rest: "60 sec",
+        gif: "",
+        primaryMuscles: ["Erector Spinae", "Glutes"],
+        secondaryMuscles: ["Hamstrings", "Multifidus"],
+        instructions: [
+          "On a reverse hyper machine: lie face-down and hook your feet into the strap. On a flat bench: lie face-down with your hips at the edge, legs hanging off.",
+          "Hold the handles or grip the bench firmly with both hands.",
+          "Keeping your legs together, raise them upward until your body forms a straight line — do not hyperextend.",
+          "Squeeze your glutes at the top and hold briefly.",
+          "Lower your legs slowly back to the starting position, feeling a decompression in your lower spine."
+        ],
+        tips: [
+          "One of the few exercises that actively decompresses the lumbar spine — excellent for lower back recovery.",
+          "Keep the movement controlled — do not use momentum to swing your legs up.",
+          "On a flat bench, you can add ankle weights for extra resistance once bodyweight is easy.",
+          "Particularly useful after heavy squat or deadlift sessions to flush blood through the lower back."
+        ]
       }
     ]
   },
@@ -2349,6 +2445,10 @@ const WIKI_TITLES = {
   'Rack Pull':                    'Deadlift',
   'Kettlebell Swing':             'Kettlebell_swing',
   'Seated Lumbar Extension':      'Back_extension',
+  'Sumo Deadlift':                'Deadlift',
+  'Trap Bar Deadlift':            'Deadlift',
+  'Dumbbell Romanian Deadlift':   'Romanian_deadlift',
+  'Reverse Hyperextension':       'Back_extension',
   // Rotator Cuff Rehab
   'Band External Rotation':       'External_rotation',
   'Band Internal Rotation':       'Internal_rotation',
@@ -2404,6 +2504,12 @@ const YT_IDS = {
   'Good Morning':                  'yfE4IFhfEmY',
   'Cable Pull-Through':            'd3sH6fbCBP0',
   'Rack Pull':                     'EpXe4wu2Ywo',
+  'Kettlebell Swing':              'aSYap2yhW8s',
+  'Seated Lumbar Extension':       'kgdWtlWxNow',
+  'Sumo Deadlift':                 'IiSAZE6yXdI',
+  'Trap Bar Deadlift':             'zCc86nyFzQo',
+  'Dumbbell Romanian Deadlift':    'wqMYwk_-P14',
+  'Reverse Hyperextension':        'A-V2wNbSo60',
   'Kettlebell Swing':              'aSYap2yhW8s',
   'Seated Lumbar Extension':       'kgdWtlWxNow',
   'Band External Rotation':        'qG-CXOtomNU',
