@@ -2397,11 +2397,9 @@ const WIKI_TITLES = {
   'Dips (Chest-Focused)':         'Dip_(exercise)',
 
   // ── Back ───────────────────────────────────────────────────────────────────
-  'Lat Pulldown':                 'Pull-down_(exercise)', // canonical slug; Lat_pulldown redirects here
-  'Seated Cable Row':             'Row_(weight-lifting)', // article thumbnail shows cable-seated-rows
+  'Lat Pulldown':                 'Lat_pulldown',
   'Barbell Bent-Over Row':        'Bent-over_row',
   'T-Bar Row':                    'T-bar_row',
-  'Cable Face Pull':              'Face_pull_(exercise)', // dedicated article exists
 
   // ── Shoulders ──────────────────────────────────────────────────────────────
   'Overhead Press (OHP)':         'Overhead_press',
@@ -2550,8 +2548,20 @@ async function fetchExerciseImage(exerciseName) {
   }
 
   /* 2 — wger exercise search + image */
+  const WGER_TERMS = {
+    'Seated Cable Row':        'cable row',
+    'Cable Face Pull':         'face pull',
+    'T-Bar Row':               't-bar row',
+    'Cable Lateral Raise':     'lateral raise',
+    'Cable Curl':              'bicep curl',
+    'Overhead Tricep Extension': 'tricep extension',
+    'Ab Rollout':              'ab wheel rollout',
+    'Oblique Cable Twist':     'woodchop',
+    'Cable Pull-Through':      'pull through',
+    'Cable Crunch':            'cable crunch',
+  };
   try {
-    const term = exerciseName
+    const term = WGER_TERMS[exerciseName] || exerciseName
       .replace(/\s*\([^)]*\)/g, '')
       .replace(/\b(Barbell|Dumbbell|Cable|Machine|Lying|Seated)\b/gi, '')
       .trim();
