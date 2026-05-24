@@ -2576,6 +2576,99 @@ const DATA = [
           "Use a wider stance on the band or double the band up for greater resistance.",
           "Excellent for warm-up sets before barbell work."
         ]
+      },
+      {
+        name: "Bird Dog",
+        machine: "Bodyweight",
+        icon: "&#129441;",
+        difficulty: "Beginner",
+        sets: "3 sets", reps: "10–12 reps each side", rest: "45 sec",
+        gif: "",
+        primaryMuscles: ["Erector Spinae", "Multifidus"],
+        secondaryMuscles: ["Glutes", "Core", "Hip Flexors"],
+        instructions: [
+          "Start on all fours with your hands directly under your shoulders and knees under your hips.",
+          "Brace your core and keep your spine neutral — do not let your lower back sag or arch.",
+          "Slowly extend your right arm forward and your left leg back simultaneously.",
+          "Hold for 2–3 seconds, keeping your hips level — resist the urge to rotate.",
+          "Return both limbs to the floor with control, then repeat on the opposite side.",
+          "Alternate sides for the full set."
+        ],
+        tips: [
+          "Imagine balancing a glass of water on your lower back — it should not spill.",
+          "Move slowly; speed is the enemy of the stability this exercise trains.",
+          "If your hips rotate when you extend the leg, reduce the range of motion.",
+          "This is one of the most effective low-load exercises for restoring lumbar stability."
+        ]
+      },
+      {
+        name: "Superman Hold",
+        machine: "Bodyweight",
+        icon: "&#129464;",
+        difficulty: "Beginner",
+        sets: "3 sets", reps: "10–15 reps", rest: "45–60 sec",
+        gif: "",
+        primaryMuscles: ["Erector Spinae", "Multifidus"],
+        secondaryMuscles: ["Glutes", "Hamstrings", "Posterior Deltoid"],
+        instructions: [
+          "Lie face-down on the floor with your arms extended straight overhead and legs together.",
+          "In one controlled motion, lift your arms, chest, and legs off the floor simultaneously.",
+          "Hold the top position for 2–3 seconds, squeezing your glutes and lower back.",
+          "Lower everything back to the floor slowly — do not drop.",
+          "For added difficulty, hold a light dumbbell in each hand."
+        ],
+        tips: [
+          "Do not strain your neck — keep your gaze toward the floor throughout.",
+          "Squeeze your glutes hard at the top; they protect the lumbar spine by sharing the load.",
+          "If full arm extension feels too difficult, try with arms by your sides (reverse snow angel position).",
+          "Great as a daily rehab exercise — even one set of 10 reps is beneficial for lower back endurance."
+        ]
+      },
+      {
+        name: "Dumbbell Single-Leg Romanian Deadlift",
+        machine: "Dumbbells",
+        icon: "&#127947;",
+        difficulty: "Intermediate",
+        sets: "3 sets", reps: "8–12 reps each side", rest: "60–90 sec",
+        gif: "",
+        primaryMuscles: ["Erector Spinae", "Hamstrings", "Glutes"],
+        secondaryMuscles: ["Core", "Hip Abductors", "Adductors"],
+        instructions: [
+          "Hold a dumbbell in each hand and stand on one leg, with a soft bend in your standing knee.",
+          "Hinge at the hip, pushing your free leg back as a counterbalance while lowering the dumbbells toward the floor.",
+          "Keep your back flat and your hips square — avoid rotating your hips open.",
+          "Lower until you feel a deep hamstring stretch in the standing leg, then drive your hips forward to return to standing.",
+          "Complete all reps on one leg before switching."
+        ],
+        tips: [
+          "Focus on the hip hinge and balance rather than how low you can go.",
+          "The rear leg acts as a counterbalance — let it rise naturally rather than forcing it.",
+          "Performing this unilaterally exposes and corrects side-to-side strength imbalances in the lower back.",
+          "Start near a wall if balance is a challenge — touch one finger to it only as needed."
+        ]
+      },
+      {
+        name: "Dumbbell Good Morning",
+        machine: "Dumbbells",
+        icon: "&#9728;",
+        difficulty: "Beginner",
+        sets: "3 sets", reps: "10–15 reps", rest: "60 sec",
+        gif: "",
+        primaryMuscles: ["Erector Spinae"],
+        secondaryMuscles: ["Hamstrings", "Glutes", "Core"],
+        instructions: [
+          "Hold a dumbbell in each hand and rest them on your upper traps, or hold one dumbbell across the back of your shoulders with both hands.",
+          "Stand with feet shoulder-width apart and a slight bend in your knees.",
+          "Hinge at the hips, pushing them back while keeping your back flat and chest tall.",
+          "Lower your torso until it approaches parallel with the floor — or as far as a flat back allows.",
+          "Drive your hips forward to return to standing and squeeze your glutes at the top."
+        ],
+        tips: [
+          "A more accessible version of the barbell good morning — perfect for home training.",
+          "Use very light weight; technique is everything here.",
+          "Keep the weight on your traps, not your neck — pad with a folded towel if needed.",
+          "Never round your lower back — reduce the range of motion before compromising form."
+        ]
       }
     ]
   },
@@ -3123,6 +3216,9 @@ const WIKI_TITLES = {
   'Reverse Hyperextension':       'Back_extension',
   'Band Good Morning':            'Good-morning_(exercise)',
   'Band Deadlift':                'Deadlift',
+  'Bird Dog':                     'Bird_dog_(exercise)',
+  'Dumbbell Single-Leg Romanian Deadlift': 'Romanian_deadlift',
+  'Dumbbell Good Morning':        'Good-morning_(exercise)',
 };
 
 /* YouTube Shorts IDs for exercise tutorials */
@@ -3194,6 +3290,10 @@ const YT_IDS = {
   'Reverse Hyperextension':        'A-V2wNbSo60',
   'Band Good Morning':             'efpXq9MMbXw',
   'Band Deadlift':                 'WCnZwQHYtp4',
+  'Bird Dog':                      'GiMk2fLZFuU',
+  'Superman Hold':                 'z6PJMT2y8GQ',
+  'Dumbbell Single-Leg Romanian Deadlift': 'fBCCugl1nlo',
+  'Dumbbell Good Morning':         'HZy-gECmWAc',
   'Band External Rotation':        'qG-CXOtomNU',
   'Band Internal Rotation':        'ZoOTHt_I3U8',
   'Band Scaption (Full Can)':      'FlT7E9YcY0Y',
@@ -3251,6 +3351,11 @@ async function fetchExerciseImage(exerciseName) {
     'Oblique Cable Twist':        'woodchop',
     'Cable Pull-Through':         'pull through',
     'Cable Crunch':               'cable crunch',
+    // Lower Back — home/dumbbell
+    'Bird Dog':                   'bird dog exercise',
+    'Superman Hold':              'back extension',
+    'Dumbbell Single-Leg Romanian Deadlift': 'romanian deadlift',
+    'Dumbbell Good Morning':      'good morning exercise',
     // Rotator Cuff — use specific exercise terms so wger finds distinct images
     'Band External Rotation':     'shoulder external rotation',
     'Band Internal Rotation':     'shoulder internal rotation',
