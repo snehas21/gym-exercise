@@ -4,6 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Gym Exercise Guide</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0a0a0f" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="GymGuide" />
+  <meta name="description" content="Your complete guide to gym exercises, yoga poses, and rehabilitation movements." />
+  <link rel="apple-touch-icon" href="icon.svg" />
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -73,6 +83,25 @@
       color: var(--text);
     }
     .nav-logo { font-size: 1.3rem; flex-shrink: 0; }
+
+    .nav-install {
+      display: none;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 12px;
+      background: linear-gradient(135deg, #a78bfa, #06d6a0);
+      border: none;
+      border-radius: 20px;
+      color: #0a0a0f;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: opacity 0.15s, transform 0.15s;
+      white-space: nowrap;
+    }
+    .nav-install.visible { display: flex; }
+    .nav-install:hover { opacity: 0.85; transform: scale(0.97); }
 
     /* ── SCREENS ── */
     .screen { display: none; animation: screenIn 0.3s ease; }
@@ -953,6 +982,7 @@
   <div class="nav-title-wrap">
     <div class="nav-title" id="nav-title">Gym Exercise Guide</div>
   </div>
+  <button class="nav-install" id="nav-install" onclick="installPWA()">&#11015; Install</button>
 </nav>
 
 <!-- ══ HOME ══ -->
@@ -4215,8 +4245,12 @@ const WIKI_TITLES = {
   'Corpse Pose':                  'Savasana',
 
   // ── Yoga: Morning ──────────────────────────────────────────────────────────
-  // Thread the Needle & Puppy Pose: stub articles with no thumbnail — wger handles them
+  'Supine Wake-Up Stretch':       'Savasana',            // supine full-body pose; Savasana has a confirmed WP image
+  'Thread the Needle':            'Marjaryasana',        // all-fours spinal rotation; cat pose article has an image
+  'Puppy Pose':                   'Adho_Mukha_Svanasana', // arms-forward kneeling; Downward Dog has a confirmed image
+  'Standing Side Stretch':        'Trikonasana',         // lateral body stretch; Triangle Pose article has an image
   'Mountain Pose':                'Tadasana',
+  'Chest Opener':                 'Matsyasana',          // chest-opening pose; Fish Pose article has an image
 
   // ── Yoga: Foundations ──────────────────────────────────────────────────────
   'Cobra Pose':                   'Cobra_pose',
@@ -4385,12 +4419,12 @@ async function fetchExerciseImage(exerciseName) {
     'Seated Spinal Twist':        'spinal rotation stretch',
     'Corpse Pose':                'relaxation',
     // Yoga: Morning
-    'Supine Wake-Up Stretch':     'full body stretch',
-    'Thread the Needle':          'thoracic rotation stretch',
-    'Puppy Pose':                 'lat stretch chest opener',
-    'Standing Side Stretch':      'side body stretch',
-    'Mountain Pose':              'posture standing',
-    'Chest Opener':               'chest stretch pectoral',
+    'Supine Wake-Up Stretch':     'lying stretch',
+    'Thread the Needle':          'thoracic rotation',
+    'Puppy Pose':                 'shoulder stretch',
+    'Standing Side Stretch':      'side stretch',
+    'Mountain Pose':              'standing posture',
+    'Chest Opener':               'chest stretch',
     // Yoga: Foundations
     'Cobra Pose':                 'cobra back extension',
     'Warrior I':                  'warrior lunge pose',
@@ -4726,6 +4760,39 @@ function openExercise(part, ex) {
 }
 
 renderHome();
+</script>
+
+<script>
+/* ── Service Worker ── */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  });
+}
+
+/* ── PWA Install Prompt ── */
+let _installPrompt = null;
+const installBtn = document.getElementById('nav-install');
+
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  _installPrompt = e;
+  installBtn.classList.add('visible');
+});
+
+window.addEventListener('appinstalled', () => {
+  installBtn.classList.remove('visible');
+  _installPrompt = null;
+});
+
+function installPWA() {
+  if (!_installPrompt) return;
+  _installPrompt.prompt();
+  _installPrompt.userChoice.then(() => {
+    _installPrompt = null;
+    installBtn.classList.remove('visible');
+  });
+}
 </script>
 </body>
 </html>
